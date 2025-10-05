@@ -1,0 +1,12 @@
+Screenshot Placeholder
+
+A screenshot.png file should be added here (1200x900 pixels recommended).
+This will be displayed in the WordPress admin when selecting themes.
+
+Suggested design:
+- Background: #2d5016 (primary green)
+- Text: "Buffalo Cannabis Network" in white
+- Size: 1200x900 pixels
+- Format: PNG
+
+You can create this using any image editor or design tool.
