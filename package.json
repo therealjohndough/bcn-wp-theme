@@ -1,0 +1,34 @@
+{
+  "name": "bcn-wp-theme",
+  "version": "1.0.0",
+  "description": "Buffalo Cannabis Network WordPress Theme - A custom marketing and community platform",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"No tests specified\" && exit 0",
+    "watch:css": "echo 'CSS watching not configured'",
+    "build:css": "echo 'CSS build not configured'",
+    "watch:js": "echo 'JS watching not configured'",
+    "build:js": "echo 'JS build not configured'",
+    "build": "npm run build:css && npm run build:js",
+    "dev": "npm run watch:css & npm run watch:js"
+  },
+  "keywords": [
+    "wordpress",
+    "theme",
+    "cannabis",
+    "community",
+    "marketing"
+  ],
+  "author": "John Dough",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/therealjohndough/bcn-wp-theme.git"
+  },
+  "bugs": {
+    "url": "https://github.com/therealjohndough/bcn-wp-theme/issues"
+  },
+  "homepage": "https://github.com/therealjohndough/bcn-wp-theme#readme",
+  "devDependencies": {},
+  "dependencies": {}
+}
