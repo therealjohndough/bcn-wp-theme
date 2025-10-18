@@ -49,12 +49,15 @@ jobs:
           SG_PORT: '18765'
           SG_REMOTE_PATH: /home/u2037-2lvglkrliykq/staging6.buffalocannabisnetwork.com/public_html/wp-content/themes/bcn-wp-theme
           SOURCE: './build'
-          DRY_RUN: '1'
+          # Allow DRY_RUN to be controlled via the repository secret `DRY_RUN` (set to '0' for live deploy).
+          DRY_RUN: ${{ secrets.DRY_RUN }}
         run: |
           : "Deploying $SOURCE to $SG_USER@$SG_HOST:$SG_REMOTE_PATH"
           RSYNC_OPTS='-az --delete --exclude .git --exclude node_modules --exclude .env'
           SSH_CMD="ssh -i ~/.ssh/id_siteground -p ${SG_PORT} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
-          if [ "$DRY_RUN" = "1" ]; then
+          # Default to dry-run if DRY_RUN is not set in secrets
+          DRY_RUN="${DRY_RUN:-1}"
+          if [ "$DRY_RUN" = "1" ] || [ -z "$DRY_RUN" ]; then
             echo "DRY RUN: rsync $RSYNC_OPTS -n -e \"$SSH_CMD\" \"${SOURCE%/}/\" \"$SG_USER@$SG_HOST:$SG_REMOTE_PATH/\""
           else
             rsync $RSYNC_OPTS -e "$SSH_CMD" "${SOURCE%/}/" "$SG_USER@$SG_HOST:$SG_REMOTE_PATH/"
