@@ -151,20 +151,44 @@ The theme uses a flexible container system:
 **Purpose**: Showcase community members
 
 **Features**:
-- Title, content, featured image
-- Excerpt support
+- Title, rich content, and featured logo support
+- Membership levels taxonomy with default Premier, Pro, and Community Partner tiers
+- Dedicated onboarding workflow that creates the profile, uploads the logo, and applies the correct membership tier from a single form
+- Custom fields for website, email, phone, and address information
 - Archive page: `/members/`
+- `[member_logo_grid]` shortcode for automated logo walls on landing pages (supports filtering by level, featured flag, and column count)
+- Optional secure submission links so trusted members can send stories or photos that land in the pending posts queue for editorial review
 
 **Usage**:
-1. Go to Members → Add New
-2. Enter member name as title
-3. Add bio in content area
-4. Add profile photo as featured image (recommended: 400x400px)
-5. Publish
+1. Go to Members → Onboard Member to launch the guided workflow.
+2. Complete the onboarding form with the member’s details, select the correct membership level, and upload their logo.
+3. Submit the form to automatically create the member’s profile page, assign taxonomy terms, and add their logo to the media library.
+4. Review the generated profile and add any supplementary media or formatting as needed.
+5. To allow a member to submit stories or images, open their profile in the editor and enable the **Member Contributions** meta box. A private key and shareable URL will be generated automatically.
+6. Optionally, manage the member later via Members → All Members.
+
+**Logo Grid Shortcode**:
+```
+[member_logo_grid level="premier-member" limit="12" columns="4" featured="false"]
+```
+- `level` (optional): Filter logos to a specific membership level slug.
+- `limit` (optional): Maximum number of members to display (`-1` for all).
+- `columns` (optional): Number of columns in the grid (2-6, default 4).
+- `featured` (optional): Set to `true` to only surface members marked as featured.
+
+**Member Submission Shortcode**:
+```
+[member_submission_form]
+```
+- Add this shortcode to a dedicated page (for example `/member-submissions/`).
+- Share the generated link (page URL + `?submission_key=...`) with members who have the **Allow this member to submit stories or media** checkbox enabled.
+- The form supports blog-style story submissions or photo uploads; everything is created as a pending post so admins can edit and publish when ready.
+- Optional: pass `redirect="/thank-you/"` to send contributors to a confirmation page after the form is submitted.
 
 **Display Members**:
 - Archive: `yoursite.com/members/`
 - Single: `yoursite.com/members/member-name/`
+- Submission form: `yoursite.com/member-submissions/?submission_key=YOUR-PRIVATE-KEY`
 
 ---
 
