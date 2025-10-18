@@ -21,4 +21,3 @@ grep -R --line-number "wp_enqueue_" ./ || true
 grep -R --line-number "add_theme_support" ./ || true
 
 echo "✅ Maintenance complete."
-
