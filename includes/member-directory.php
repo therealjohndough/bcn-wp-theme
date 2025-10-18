@@ -647,15 +647,22 @@ function bcn_handle_member_onboarding_form() {
     }
 
     if (!empty($_FILES['bcn_member_logo']['name'])) {
-        require_once ABSPATH . 'wp-admin/includes/file.php';
-        require_once ABSPATH . 'wp-admin/includes/media.php';
-        require_once ABSPATH . 'wp-admin/includes/image.php';
-
-        $attachment_id = media_handle_upload('bcn_member_logo', $post_id);
-        if (!is_wp_error($attachment_id)) {
-            set_post_thumbnail($post_id, $attachment_id);
+        // Basic validation before handing off to WP media handlers.
+        $uploaded = isset($_FILES['bcn_member_logo']) ? $_FILES['bcn_member_logo'] : null;
+        $validation = bcn_validate_uploaded_image($uploaded);
+        if (is_wp_error($validation)) {
+            add_settings_error('bcn_member_onboarding', 'bcn-member-logo', $validation->get_error_message(), 'error');
         } else {
-            add_settings_error('bcn_member_onboarding', 'bcn-member-logo', __('The member was created, but the logo upload failed.', 'bcn-wp-theme'), 'error');
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+            require_once ABSPATH . 'wp-admin/includes/media.php';
+            require_once ABSPATH . 'wp-admin/includes/image.php';
+
+            $attachment_id = media_handle_upload('bcn_member_logo', $post_id);
+            if (!is_wp_error($attachment_id)) {
+                set_post_thumbnail($post_id, $attachment_id);
+            } else {
+                add_settings_error('bcn_member_onboarding', 'bcn-member-logo', __('The member was created, but the logo upload failed.', 'bcn-wp-theme'), 'error');
+            }
         }
     }
 
@@ -972,17 +979,24 @@ function bcn_member_submission_form_shortcode($atts) {
                     $uploaded_file = isset($_FILES['bcn_member_submission_file']) ? $_FILES['bcn_member_submission_file'] : null;
 
                     if ('photo' === $fields['type'] && !empty($uploaded_file) && !empty($uploaded_file['name'])) {
-                        require_once ABSPATH . 'wp-admin/includes/file.php';
-                        require_once ABSPATH . 'wp-admin/includes/media.php';
-                        require_once ABSPATH . 'wp-admin/includes/image.php';
-
-                        $attachment_id = media_handle_upload('bcn_member_submission_file', $post_id);
-
-                        if (is_wp_error($attachment_id)) {
-                            $errors[] = __('Your image could not be uploaded. Please try again or reduce the file size.', 'bcn-wp-theme');
+                        // Validate upload before processing.
+                        $validation = bcn_validate_uploaded_image($uploaded_file);
+                        if (is_wp_error($validation)) {
+                            $errors[] = $validation->get_error_message();
                             wp_delete_post($post_id, true);
                         } else {
-                            set_post_thumbnail($post_id, $attachment_id);
+                            require_once ABSPATH . 'wp-admin/includes/file.php';
+                            require_once ABSPATH . 'wp-admin/includes/media.php';
+                            require_once ABSPATH . 'wp-admin/includes/image.php';
+
+                            $attachment_id = media_handle_upload('bcn_member_submission_file', $post_id);
+
+                            if (is_wp_error($attachment_id)) {
+                                $errors[] = __('Your image could not be uploaded. Please try again or reduce the file size.', 'bcn-wp-theme');
+                                wp_delete_post($post_id, true);
+                            } else {
+                                set_post_thumbnail($post_id, $attachment_id);
+                            }
                         }
                     }
 
@@ -1094,4 +1108,34 @@ function bcn_get_member_profile_fields($post_id) {
         'address' => get_post_meta($post_id, 'bcn_member_address', true),
         'levels'  => wp_get_post_terms($post_id, 'bcn_membership_level', array('fields' => 'all')),
     );
+}
+
+/**
+ * Validate an uploaded image array from $_FILES.
+ *
+ * @param array|null $file The uploaded file item (from $_FILES) or null.
+ * @return true|WP_Error True if valid, WP_Error on failure.
+ */
+function bcn_validate_uploaded_image($file) {
+    if (empty($file) || !is_array($file) || empty($file['name'])) {
+        return new WP_Error('no_file', __('No file was uploaded.', 'bcn-wp-theme'));
+    }
+
+    if (!empty($file['error'])) {
+        return new WP_Error('upload_error', __('There was an error during the file upload. Please try again.', 'bcn-wp-theme'));
+    }
+
+    // Max file size: 5MB
+    $max_bytes = 5 * 1024 * 1024;
+    if (!empty($file['size']) && $file['size'] > $max_bytes) {
+        return new WP_Error('file_too_large', __('The uploaded file is too large. Please use an image smaller than 5 MB.', 'bcn-wp-theme'));
+    }
+
+    // Basic MIME/type check using the filename and WP helper.
+    $filetype = wp_check_filetype($file['name']);
+    if (empty($filetype['type']) || 0 !== strpos($filetype['type'], 'image/')) {
+        return new WP_Error('invalid_type', __('Please upload a JPG, PNG, or GIF image.', 'bcn-wp-theme'));
+    }
+
+    return true;
 }
