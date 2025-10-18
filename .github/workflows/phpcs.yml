@@ -3,6 +3,31 @@ name: PHPCS
 on:
   pull_request:
     paths:
+      - '**/*.php'
+  push:
+    branches:
+      - main
+    paths:
+      - '**/*.php'
+
+jobs:
+  phpcs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v4
+        with:
+          php-version: '8.1'
+      - name: Composer install (dev)
+        run: composer install --no-progress --no-interaction
+      - name: Run PHPCS
+        run: ./vendor/bin/phpcs --standard=phpcs.xml.dist -n
+name: PHPCS
+
+on:
+  pull_request:
+    paths:
       - '**.php'
       - 'phpcs.xml.dist'
       - 'composer.*'
