@@ -206,6 +206,26 @@ For issues, questions, or contributions:
 - Follow WordPress theme development best practices
 - Check WordPress Codex for theme development guidelines
 
+## GitHub Actions: Deploy to SiteGround
+
+There's a workflow at `.github/workflows/deploy-siteground.yml` that will run on push to `main` and deploy a directory (by default `./build`) to SiteGround via `rsync` over SSH.
+
+Required repository secrets:
+- `SG_DEPLOY_KEY` - the private SSH key (PEM) used to authenticate to SiteGround. Paste the private key contents (NOT the public key).
+- `SG_HOST` - SSH hostname for SiteGround (for example `ssh.buffalocannabisnetwork.com`).
+- `SG_USER` - SSH username (for example `u2037-...`).
+- `SG_PORT` - SSH port (for example `18765`). Optional; the workflow defaults to `18765` when unset.
+- `SG_REMOTE_PATH` - remote path to deploy into (for example `/home/u2037-.../public_html/wp-content/themes/bcn-wp-theme`).
+- `SG_SOURCE` - optional: local path to deploy. Defaults to `./build` if not set.
+
+Optional secret:
+- `DRY_RUN` - set to `1` to only print the rsync command during workflow runs (useful for testing).
+
+How it works:
+- On push to `main`, the workflow checks out the repo, prepares the SSH key from `SG_DEPLOY_KEY`, attempts an `npm ci`/`npm install` and `npm run build` if `package.json` exists, then runs `rsync` to copy the `SG_SOURCE` directory to the remote path.
+
+Security note: keep `SG_DEPLOY_KEY` secret and never commit private keys into the repository. Use the GitHub repository settings to add secrets.
+
 ## Credits
 
 - Theme Author: John Dough

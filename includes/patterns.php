@@ -9,17 +9,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 function bcn_register_block_patterns() {
 
     // Category
-    register_block_pattern_category(
-        'bcn',
-        [ 'label' => __( 'BCN', 'bcn' ) ]
-    );
+  register_block_pattern_category(
+    'bcn',
+    [ 'label' => __( 'BCN', 'bcn-wp-theme' ) ]
+  );
 
     // Contact – Get in Touch (slick glass cards)
     register_block_pattern(
         'bcn/contact-get-in-touch',
         [
-            'title'       => __( 'Contact – Get in Touch (BCN)', 'bcn' ),
-            'description' => __( 'Four-card slick contact section: inquiries, membership, events/education, mailing address.', 'bcn' ),
+      'title'       => __( 'Contact – Get in Touch (BCN)', 'bcn-wp-theme' ),
+      'description' => __( 'Four-card slick contact section: inquiries, membership, events/education, mailing address.', 'bcn-wp-theme' ),
             'categories'  => [ 'bcn' ],
             'content'     => '
 <!-- wp:group {"tagName":"section","className":"bcn-contact-section slick","layout":{"type":"constrained"}} -->
@@ -73,8 +73,8 @@ function bcn_register_block_patterns() {
     register_block_pattern(
         'bcn/stay-connected',
         [
-            'title'       => __( 'Stay Connected (BCN)', 'bcn' ),
-            'description' => __( 'Slick social + newsletter block in BCN style.', 'bcn' ),
+      'title'       => __( 'Stay Connected (BCN)', 'bcn-wp-theme' ),
+      'description' => __( 'Slick social + newsletter block in BCN style.', 'bcn-wp-theme' ),
             'categories'  => [ 'bcn' ],
             'content'     => '
 <!-- wp:group {"tagName":"section","className":"bcn-social-section slick","layout":{"type":"constrained"}} -->

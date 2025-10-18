@@ -1,0 +1,31 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-wordpress}
+      MYSQL_USER: ${MYSQL_USER:-wp}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+
+  wordpress:
+    image: wordpress:6.4-php8.3-apache
+    depends_on:
+      - db
+    ports:
+      - "${WP_PORT:-8080}:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: ${MYSQL_USER:-wp}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD:-${MYSQL_PASSWORD}}
+      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME:-wordpress}
+    volumes:
+      # keep uploads persistent
+      - ./wp-data/uploads:/var/www/html/wp-content/uploads
+      # mount this repository as the theme directory
+      - ./:/var/www/html/wp-content/themes/bcn-wp-theme:rw
+
+volumes:
+  db_data:

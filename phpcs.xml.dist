@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<ruleset name="BCN WP Theme">
+    <description>WordPress Coding Standards for BCN WP Theme</description>
+    <rule ref="WordPress"/>
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>node_modules/*</exclude-pattern>
+    <exclude-pattern>assets/*</exclude-pattern>
+    <exclude-pattern>preview/*</exclude-pattern>
+</ruleset>
