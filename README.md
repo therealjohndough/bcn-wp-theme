@@ -226,6 +226,54 @@ How it works:
 
 Security note: keep `SG_DEPLOY_KEY` secret and never commit private keys into the repository. Use the GitHub repository settings to add secrets.
 
+Local `.env` and deploy notes
+-----------------------------
+
+For local previews and for running the Docker Compose preview, create a `.env` file in the repository root with values similar to the `.env.example` file already included. Do NOT commit your `.env` file — it should remain local and out of version control.
+
+Example `.env` entries (do not paste private keys here):
+
+```env
+MYSQL_ROOT_PASSWORD=ChangeMe
+MYSQL_DATABASE=wordpress
+MYSQL_USER=wordpress
+MYSQL_PASSWORD=wordpress
+WORDPRESS_DB_HOST=db
+WORDPRESS_DB_NAME=wordpress
+WORDPRESS_DB_USER=wordpress
+WORDPRESS_DB_PASSWORD=wordpress
+```
+
+To run the local preview (Docker must be installed):
+
+```bash
+cp .env.example .env
+# Edit .env to set secure passwords for local use
+./scripts/preview-start.sh
+# When done:
+./scripts/preview-stop.sh
+```
+
+Deploying to SiteGround (manual or CI)
+-------------------------------------
+
+The GitHub Action will deploy the `SG_SOURCE` path (defaults to `./build`) to the remote `SG_REMOTE_PATH` using the private key stored in the `SG_DEPLOY_KEY` repository secret. To perform a real deploy:
+
+1. Generate an SSH key pair locally (if you don't already have one):
+
+```bash
+ssh-keygen -t rsa -b 4096 -C "deploy@yourhost" -f ~/.ssh/siteground_deploy_key
+```
+
+2. Add the public key (`~/.ssh/siteground_deploy_key.pub`) to your SiteGround account SSH authorized keys (SiteGround control panel -> SSH Keys).
+
+3. Add the private key content to the `SG_DEPLOY_KEY` repository secret in GitHub (Settings → Secrets). Also set `SG_HOST`, `SG_USER`, `SG_PORT`, and `SG_REMOTE_PATH` as repo secrets or update the workflow to set those values.
+
+4. Ensure the `SG_SOURCE` path exists and contains the files you want to deploy (for example, run `npm run build` or create a `build/` directory with the theme files). The workflow runs `npm ci` and `npm run build` when `package.json` exists by default.
+
+If you prefer to deploy from your local machine, use `scripts/deploy-local.sh` which mirrors the CI deploy command but runs locally. It defaults to a dry-run and allows you to specify the SSH key path and remote destination.
+
+
 ## Credits
 
 - Theme Author: John Dough
