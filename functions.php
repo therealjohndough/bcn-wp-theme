@@ -143,6 +143,12 @@ function bcn_scripts() {
 }
 add_action('wp_enqueue_scripts', 'bcn_scripts');
 
+// Load BCN pattern styles
+add_action('wp_enqueue_scripts', function() {
+    $version = wp_get_theme()->get('Version');
+    wp_enqueue_style('bcn-patterns', get_template_directory_uri() . '/assets/css/patterns.css', [], $version);
+});
+
 /**
  * Custom template tags for this theme
  */
@@ -157,6 +163,9 @@ require get_template_directory() . '/includes/template-functions.php';
  * Customizer additions
  */
 require get_template_directory() . '/includes/customizer.php';
+
+// Load pattern registrations
+require_once get_template_directory() . '/includes/patterns.php';
 
 /**
  * Member directory features

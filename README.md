@@ -95,6 +95,13 @@ You can customize these colors in:
 1. WordPress Customizer (Appearance → Customize → Theme Colors)
 2. Or directly in `style.css` under `:root` variables
 
+### BCN Block Patterns
+Two ready-made patterns are available under **Patterns → BCN** in the block editor:
+- **Contact – Get in Touch (BCN)**
+- **Stay Connected (BCN)**
+
+If you don’t see them, ensure `includes/patterns.php` is loaded and `assets/css/patterns.css` is enqueued in `functions.php`.
+
 ### Navigation Menus
 
 The theme supports three menu locations:
