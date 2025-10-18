@@ -6,6 +6,52 @@ A custom WordPress theme for Buffalo Cannabis Network - a marketing and communit
 
 This theme provides a robust, maintainable foundation for building a community-driven marketing platform. It includes modern WordPress best practices, responsive design, and custom post types specifically designed for community engagement.
 
+## Local Testing Environments
+
+### Run the Theme with Docker Compose (Recommended)
+
+1. **Copy the environment template**
+   ```bash
+   cp .env.example .env
+   ```
+   Update the generated `.env` with secure passwords. The defaults expose the theme on port `8080`.
+2. **Start WordPress and MySQL**
+   ```bash
+   docker compose up --build
+   ```
+   The containers create a fresh WordPress install and mount this repository as `wp-content/themes/bcn-wp-theme`.
+3. **Finish setup in the browser**
+   - Visit [http://localhost:8080](http://localhost:8080)
+   - Complete the WordPress installer
+   - Activate **Buffalo Cannabis Network** under **Appearance → Themes**
+4. **Stop the environment** when finished testing
+   ```bash
+   docker compose down
+   ```
+
+> **Data persistence:** Database data is stored in the `db_data` Docker volume and uploads are kept in `wp-data/uploads/`, so your demo content survives container restarts.
+
+### Provision a Codex Environment
+
+Use ChatGPT’s [Codex environments](https://chatgpt.com/codex/settings/environments) to spin up a disposable test instance:
+
+1. Click **Create environment** and choose a name such as `bcn-wp-theme`.
+2. Set the **Repository** to this Git project (GitHub URL or your fork).
+3. Choose the **Runtime** `Docker` and provide the following start command so Codex boots WordPress automatically:
+   ```bash
+   cp .env.example .env && docker compose up --build
+   ```
+4. (Optional) Add the `WP_PORT=8080` environment variable override if you need a different public port.
+5. Save the environment. Codex will start the containers and forward the exposed port so you can open the WordPress installer directly from the session sidebar.
+
+Once Codex finishes booting:
+
+- Complete the WordPress installation wizard.
+- Activate the theme from **Appearance → Themes**.
+- Populate sample content (see recommendations later in this guide) to validate templates, CPT archives, and ACF layouts.
+
+Stop the environment from the Codex dashboard when you are done to avoid unnecessary usage.
+
 ## Features
 
 ### Core Features
