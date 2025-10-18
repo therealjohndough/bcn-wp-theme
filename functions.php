@@ -159,6 +159,11 @@ require get_template_directory() . '/includes/template-functions.php';
 require get_template_directory() . '/includes/customizer.php';
 
 /**
+ * Member directory features
+ */
+require get_template_directory() . '/includes/member-directory.php';
+
+/**
  * Custom post types and taxonomies
  */
 require get_template_directory() . '/includes/post-types.php';
