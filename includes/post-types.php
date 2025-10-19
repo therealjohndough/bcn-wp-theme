@@ -42,37 +42,8 @@ function bcn_register_post_types() {
         )
     );
 
-    // Register Community Member Post Type
-    register_post_type(
-        'bcn_member',
-        array(
-            'labels'              => array(
-                'name'               => _x('Members', 'Post Type General Name', 'bcn-wp-theme'),
-                'singular_name'      => _x('Member', 'Post Type Singular Name', 'bcn-wp-theme'),
-                'menu_name'          => __('Members', 'bcn-wp-theme'),
-                'name_admin_bar'     => __('Member', 'bcn-wp-theme'),
-                'add_new_item'       => __('Add New Member', 'bcn-wp-theme'),
-                'edit_item'          => __('Edit Member', 'bcn-wp-theme'),
-                'view_item'          => __('View Member', 'bcn-wp-theme'),
-                'all_items'          => __('All Members', 'bcn-wp-theme'),
-                'search_items'       => __('Search Members', 'bcn-wp-theme'),
-                'not_found'          => __('No members found.', 'bcn-wp-theme'),
-            ),
-            'public'              => true,
-            'publicly_queryable'  => true,
-            'show_ui'             => true,
-            'show_in_menu'        => true,
-            'query_var'           => true,
-            'rewrite'             => array('slug' => 'members'),
-            'capability_type'     => 'post',
-            'has_archive'         => true,
-            'hierarchical'        => false,
-            'menu_position'       => 6,
-            'menu_icon'           => 'dashicons-groups',
-            'supports'            => array('title', 'editor', 'thumbnail', 'excerpt'),
-            'show_in_rest'        => true,
-        )
-    );
+    // Note: The `bcn_member` post type is registered in `includes/member-directory.php`
+    // to keep member functionality encapsulated. Avoid double registration here.
 }
 add_action('init', 'bcn_register_post_types');
 
