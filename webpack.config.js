@@ -12,8 +12,9 @@ module.exports = (env, argv) => {
     entry: {
       'main': './assets/js/main.js',
       'member-cards-enhanced': './assets/js/member-cards-enhanced.js',
-      'member-archive-enhanced': './assets/js/member-archive-enhanced.js',
-      'admin': './assets/js/admin.js'
+      'member-archive': './assets/js/member-archive.js',
+      'customizer': './assets/js/customizer.js',
+      'navigation': './assets/js/navigation.js'
     },
     output: {
       path: path.resolve(__dirname, 'build/assets'),

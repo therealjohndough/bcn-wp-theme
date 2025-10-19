@@ -134,6 +134,7 @@ function bcn_scripts() {
     if (is_post_type_archive('bcn_member') || is_singular('bcn_member')) {
         wp_enqueue_style('bcn-member-cards-enhanced', get_template_directory_uri() . '/assets/css/member-cards-enhanced.css', array(), '1.0.0');
         wp_enqueue_style('bcn-member-archive-enhanced', get_template_directory_uri() . '/assets/css/member-archive-enhanced.css', array('bcn-member-cards-enhanced'), '1.0.0');
+        wp_enqueue_script('bcn-member-archive-enhanced', get_template_directory_uri() . '/assets/js/member-archive-enhanced.js', array('jquery'), '1.0.0', true);
         wp_enqueue_script('bcn-member-cards-enhanced', get_template_directory_uri() . '/assets/js/member-cards-enhanced.js', array('jquery'), '1.0.0', true);
     }
 
@@ -258,6 +259,15 @@ function bcn_enqueue_scripts() {
     if (is_singular('bcn_member') || is_post_type_archive('bcn_member')) {
         wp_enqueue_style('bcn-member-cards-enhanced', get_template_directory_uri() . '/assets/css/member-cards-enhanced.css', array('bcn-style'), wp_get_theme()->get('Version'));
         wp_enqueue_script('bcn-member-cards-enhanced', get_template_directory_uri() . '/assets/js/member-cards-enhanced.js', array('jquery'), wp_get_theme()->get('Version'), true);
+    }
+    
+    // Admin scripts
+    if (is_admin()) {
+        wp_enqueue_script('bcn-admin', get_template_directory_uri() . '/assets/js/admin.js', array('jquery'), wp_get_theme()->get('Version'), true);
+        wp_localize_script('bcn-admin', 'bcn_admin', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('bcn_admin_nonce')
+        ));
     }
 }
 add_action('wp_enqueue_scripts', 'bcn_enqueue_scripts');
