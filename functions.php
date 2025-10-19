@@ -227,3 +227,43 @@ function bcn_excerpt_more($more) {
     return '&hellip;';
 }
 add_filter('excerpt_more', 'bcn_excerpt_more');
+
+/**
+ * Enqueue scripts and styles
+ */
+function bcn_enqueue_scripts() {
+    // Theme stylesheet
+    wp_enqueue_style('bcn-style', get_stylesheet_uri(), array(), wp_get_theme()->get('Version'));
+    
+    // Member archive styles
+    if (is_post_type_archive('bcn_member') || is_page_template('page-members.php')) {
+        wp_enqueue_style('bcn-member-archive', get_template_directory_uri() . '/assets/css/member-archive.css', array('bcn-style'), wp_get_theme()->get('Version'));
+        wp_enqueue_style('bcn-member-logo-marquee', get_template_directory_uri() . '/assets/css/member-logo-marquee.css', array('bcn-style'), wp_get_theme()->get('Version'));
+        wp_enqueue_script('bcn-member-archive', get_template_directory_uri() . '/assets/js/member-archive.js', array('jquery'), wp_get_theme()->get('Version'), true);
+    }
+    
+    // Member registration styles
+    if (is_page() && has_shortcode(get_post()->post_content, 'member_registration_form')) {
+        wp_enqueue_style('bcn-member-registration', get_template_directory_uri() . '/assets/css/member-registration.css', array('bcn-style'), wp_get_theme()->get('Version'));
+    }
+    
+    // Marquee styles for any page with marquee shortcodes
+    if (is_page() && (has_shortcode(get_post()->post_content, 'premier_member_marquee') || 
+                     has_shortcode(get_post()->post_content, 'pro_member_marquee') || 
+                     has_shortcode(get_post()->post_content, 'member_marquees'))) {
+        wp_enqueue_style('bcn-member-logo-marquee', get_template_directory_uri() . '/assets/css/member-logo-marquee.css', array('bcn-style'), wp_get_theme()->get('Version'));
+    }
+    
+    // Enhanced member cards
+    if (is_singular('bcn_member') || is_post_type_archive('bcn_member')) {
+        wp_enqueue_style('bcn-member-cards-enhanced', get_template_directory_uri() . '/assets/css/member-cards-enhanced.css', array('bcn-style'), wp_get_theme()->get('Version'));
+        wp_enqueue_script('bcn-member-cards-enhanced', get_template_directory_uri() . '/assets/js/member-cards-enhanced.js', array('jquery'), wp_get_theme()->get('Version'), true);
+    }
+}
+add_action('wp_enqueue_scripts', 'bcn_enqueue_scripts');
+
+/**
+ * Include additional functionality
+ */
+require_once get_template_directory() . '/includes/member-registration.php';
+require_once get_template_directory() . '/includes/member-marquee-shortcodes.php';

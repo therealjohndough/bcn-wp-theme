@@ -1,0 +1,187 @@
+{
+  "agents": [
+    {
+      "id": "bcn-code-quality",
+      "name": "BCN Code Quality Agent",
+      "description": "Monitors code quality, runs PHPCS, ESLint, and Prettier",
+      "trigger": {
+        "type": "file-change",
+        "patterns": ["**/*.php", "**/*.js", "**/*.css", "**/*.scss"]
+      },
+      "actions": [
+        {
+          "type": "run-command",
+          "command": "phpcs --standard=WordPress . --report=json",
+          "output": ".cursor/agents/logs/phpcs.json"
+        },
+        {
+          "type": "run-command", 
+          "command": "eslint assets/js/ --format=json",
+          "output": ".cursor/agents/logs/eslint.json"
+        },
+        {
+          "type": "run-command",
+          "command": "prettier --check assets/css/ --write",
+          "output": ".cursor/agents/logs/prettier.log"
+        }
+      ],
+      "schedule": {
+        "type": "interval",
+        "minutes": 30
+      }
+    },
+    {
+      "id": "bcn-performance",
+      "name": "BCN Performance Agent", 
+      "description": "Monitors site performance with Lighthouse audits",
+      "trigger": {
+        "type": "schedule",
+        "cron": "0 9 * * *"
+      },
+      "actions": [
+        {
+          "type": "run-command",
+          "command": "lighthouse https://staging6.buffalocannabisnetwork.com --output=json --output-path=.cursor/agents/reports/lighthouse-staging.json --chrome-flags='--headless'"
+        },
+        {
+          "type": "run-command",
+          "command": "lighthouse https://buffalocannabisnetwork.com --output=json --output-path=.cursor/agents/reports/lighthouse-production.json --chrome-flags='--headless'"
+        },
+        {
+          "type": "analyze-performance",
+          "thresholds": {
+            "performance": 90,
+            "accessibility": 90,
+            "seo": 90,
+            "best-practices": 90
+          }
+        }
+      ]
+    },
+    {
+      "id": "bcn-security",
+      "name": "BCN Security Agent",
+      "description": "Monitors security vulnerabilities and dependencies",
+      "trigger": {
+        "type": "schedule",
+        "cron": "0 2 * * *"
+      },
+      "actions": [
+        {
+          "type": "run-command",
+          "command": "composer audit --format=json",
+          "output": ".cursor/agents/logs/composer-audit.json"
+        },
+        {
+          "type": "run-command",
+          "command": "npm audit --json",
+          "output": ".cursor/agents/logs/npm-audit.json"
+        },
+        {
+          "type": "run-command",
+          "command": "wp core verify-checksums --format=json",
+          "output": ".cursor/agents/logs/wp-verify.json"
+        }
+      ]
+    },
+    {
+      "id": "bcn-deployment",
+      "name": "BCN Deployment Agent",
+      "description": "Handles automated deployments and health checks",
+      "trigger": {
+        "type": "webhook",
+        "url": "/webhook/deploy"
+      },
+      "actions": [
+        {
+          "type": "run-command",
+          "command": "./scripts/test-theme.sh",
+          "condition": "success"
+        },
+        {
+          "type": "run-command",
+          "command": "./scripts/deploy-local.sh staging",
+          "condition": "previous-success"
+        },
+        {
+          "type": "run-command",
+          "command": "curl -f https://staging6.buffalocannabisnetwork.com",
+          "condition": "previous-success"
+        }
+      ]
+    },
+    {
+      "id": "bcn-content",
+      "name": "BCN Content Agent",
+      "description": "Manages ACF fields, content updates, and SEO optimization",
+      "trigger": {
+        "type": "file-change",
+        "patterns": ["acf-json/**/*.json", "template-parts/**/*.php"]
+      },
+      "actions": [
+        {
+          "type": "run-command",
+          "command": "wp acf sync",
+          "condition": "file-changed"
+        },
+        {
+          "type": "run-command",
+          "command": "wp rewrite flush",
+          "condition": "previous-success"
+        },
+        {
+          "type": "run-command",
+          "command": "wp cache flush",
+          "condition": "previous-success"
+        }
+      ]
+    },
+    {
+      "id": "bcn-seo",
+      "name": "BCN SEO Agent",
+      "description": "Monitors and optimizes SEO elements",
+      "trigger": {
+        "type": "schedule",
+        "cron": "0 6 * * 1"
+      },
+      "actions": [
+        {
+          "type": "analyze-seo",
+          "urls": [
+            "https://staging6.buffalocannabisnetwork.com",
+            "https://staging6.buffalocannabisnetwork.com/membership/",
+            "https://staging6.buffalocannabisnetwork.com/events/",
+            "https://staging6.buffalocannabisnetwork.com/news/"
+          ],
+          "checks": [
+            "meta-titles",
+            "meta-descriptions", 
+            "heading-structure",
+            "image-alt-tags",
+            "internal-linking",
+            "schema-markup"
+          ]
+        },
+        {
+          "type": "generate-report",
+          "format": "markdown",
+          "output": ".cursor/agents/reports/seo-audit.md"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "logLevel": "info",
+    "maxConcurrentAgents": 3,
+    "retryAttempts": 3,
+    "retryDelay": 5000,
+    "notifications": {
+      "enabled": true,
+      "channels": ["console", "file"],
+      "webhooks": {
+        "slack": "SLACK_WEBHOOK_URL",
+        "discord": "DISCORD_WEBHOOK_URL"
+      }
+    }
+  }
+}
