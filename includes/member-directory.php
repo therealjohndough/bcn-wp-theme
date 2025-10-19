@@ -677,9 +677,12 @@ function bcn_handle_member_onboarding_form() {
         if (is_wp_error($validation)) {
             add_settings_error('bcn_member_onboarding', 'bcn-member-logo', $validation->get_error_message(), 'error');
         } else {
-            require_once ABSPATH . 'wp-admin/includes/file.php';
-            require_once ABSPATH . 'wp-admin/includes/media.php';
-            require_once ABSPATH . 'wp-admin/includes/image.php';
+            // Load WordPress admin functions
+            if (!function_exists('media_handle_upload')) {
+                require_once ABSPATH . 'wp-admin/includes/file.php';
+                require_once ABSPATH . 'wp-admin/includes/media.php';
+                require_once ABSPATH . 'wp-admin/includes/image.php';
+            }
 
             $attachment_id = media_handle_upload('bcn_member_logo', $post_id);
             if (!is_wp_error($attachment_id)) {
@@ -1009,9 +1012,12 @@ function bcn_member_submission_form_shortcode($atts) {
                             $errors[] = $validation->get_error_message();
                             wp_delete_post($post_id, true);
                         } else {
-                            require_once ABSPATH . 'wp-admin/includes/file.php';
-                            require_once ABSPATH . 'wp-admin/includes/media.php';
-                            require_once ABSPATH . 'wp-admin/includes/image.php';
+                            // Load WordPress admin functions
+                            if (!function_exists('media_handle_upload')) {
+                                require_once ABSPATH . 'wp-admin/includes/file.php';
+                                require_once ABSPATH . 'wp-admin/includes/media.php';
+                                require_once ABSPATH . 'wp-admin/includes/image.php';
+                            }
 
                             $attachment_id = media_handle_upload('bcn_member_submission_file', $post_id);
 
