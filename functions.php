@@ -25,9 +25,12 @@ function bcn_theme_setup() {
     add_theme_support('post-thumbnails');
     set_post_thumbnail_size(1200, 675, true);
 
-    // Add custom image sizes
-    add_image_size('bcn-featured', 800, 450, true);
-    add_image_size('bcn-thumbnail', 400, 300, true);
+    // Add custom image sizes with descriptive names
+    add_image_size('bcn-member-logo', 300, 200, true); // For member directory cards
+    add_image_size('bcn-member-featured', 600, 400, true); // For featured member displays
+    add_image_size('bcn-archive-thumbnail', 400, 300, true); // For archive listings
+    add_image_size('bcn-hero-image', 1200, 675, true); // For hero sections
+    add_image_size('bcn-card-image', 500, 350, true); // For general card layouts
 
     // Register navigation menus
     register_nav_menus(array(
@@ -72,8 +75,40 @@ function bcn_theme_setup() {
 
     // Add support for align wide
     add_theme_support('align-wide');
+
+    // Add comprehensive block supports
+    add_theme_support('wp-block-styles');
+    add_theme_support('custom-line-height');
+    add_theme_support('custom-units');
+    add_theme_support('custom-spacing');
+    add_theme_support('custom-font-size');
+    add_theme_support('custom-color');
+    add_theme_support('custom-background');
+    add_theme_support('custom-logo');
+    add_theme_support('custom-header');
+    add_theme_support('post-thumbnails');
+    add_theme_support('title-tag');
+    add_theme_support('html5', array(
+        'search-form',
+        'comment-form',
+        'comment-list',
+        'gallery',
+        'caption',
+        'style',
+        'script',
+    ));
 }
 add_action('after_setup_theme', 'bcn_theme_setup');
+
+/**
+ * Add custom query vars for member filtering
+ */
+function bcn_add_query_vars($qv) {
+    $qv[] = 'membership_level';
+    $qv[] = 'featured_only';
+    return $qv;
+}
+add_filter('query_vars', 'bcn_add_query_vars');
 
 /**
  * Set the content width in pixels
@@ -120,25 +155,48 @@ function bcn_widgets_init() {
 add_action('widgets_init', 'bcn_widgets_init');
 
 /**
+ * Helper function to get asset version based on file modification time
+ *
+ * @param string $path Asset path relative to theme directory
+ * @return array Array with [url, version]
+ */
+function bcn_asset(string $path): array {
+    $file = get_theme_file_path($path);
+    return [get_theme_file_uri($path), file_exists($file) ? filemtime($file) : null];
+}
+
+/**
  * Enqueue scripts and styles
  */
 function bcn_scripts() {
-    // Enqueue main stylesheet
-    wp_enqueue_style('bcn-style', get_stylesheet_uri(), array(), '1.0.0');
+    // Enqueue main stylesheet with versioning
+    [$css_url, $css_ver] = bcn_asset('style.css');
+    wp_enqueue_style('bcn-style', $css_url, array(), $css_ver);
 
-    // Enqueue custom scripts
-    wp_enqueue_script('bcn-navigation', get_template_directory_uri() . '/assets/js/navigation.js', array(), '1.0.0', true);
-    wp_enqueue_script('bcn-main', get_template_directory_uri() . '/assets/js/main.js', array('jquery'), '1.0.0', true);
+    // Enqueue custom scripts with proper loading strategy
+    [$nav_url, $nav_ver] = bcn_asset('assets/js/navigation.js');
+    wp_enqueue_script('bcn-navigation', $nav_url, array(), $nav_ver, true);
+    wp_script_add_data('bcn-navigation', 'strategy', 'defer');
+
+    [$main_url, $main_ver] = bcn_asset('assets/js/main.js');
+    wp_enqueue_script('bcn-main', $main_url, array('jquery'), $main_ver, true);
+    wp_script_add_data('bcn-main', 'strategy', 'defer');
     
-    // Enqueue enhanced member cards assets
+    // Enqueue enhanced member cards assets only where needed
     if (is_post_type_archive('bcn_member') || is_singular('bcn_member')) {
-        wp_enqueue_style('bcn-member-cards-enhanced', get_template_directory_uri() . '/assets/css/member-cards-enhanced.css', array(), '1.0.0');
-        wp_enqueue_style('bcn-member-archive-enhanced', get_template_directory_uri() . '/assets/css/member-archive-enhanced.css', array('bcn-member-cards-enhanced'), '1.0.0');
-        wp_enqueue_script('bcn-member-cards-enhanced', get_template_directory_uri() . '/assets/js/member-cards-enhanced.js', array('jquery'), '1.0.0', true);
+        [$cards_css_url, $cards_css_ver] = bcn_asset('assets/css/member-cards-enhanced.css');
+        wp_enqueue_style('bcn-member-cards-enhanced', $cards_css_url, array(), $cards_css_ver);
+        
+        [$archive_css_url, $archive_css_ver] = bcn_asset('assets/css/member-archive-enhanced.css');
+        wp_enqueue_style('bcn-member-archive-enhanced', $archive_css_url, array('bcn-member-cards-enhanced'), $archive_css_ver);
+        
+        [$cards_js_url, $cards_js_ver] = bcn_asset('assets/js/member-cards-enhanced.js');
+        wp_enqueue_script('bcn-member-cards-enhanced', $cards_js_url, array('jquery'), $cards_js_ver, true);
+        wp_script_add_data('bcn-member-cards-enhanced', 'strategy', 'defer');
     }
 
     // Add inline script for smooth scroll
-    wp_add_inline_script('bcn-main', 'var bcnTheme = ' . json_encode(array(
+    wp_add_inline_script('bcn-main', 'var bcnTheme = ' . wp_json_encode(array(
         'ajaxUrl' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('bcn-nonce'),
     )), 'before');
@@ -150,10 +208,10 @@ function bcn_scripts() {
 }
 add_action('wp_enqueue_scripts', 'bcn_scripts');
 
-// Load BCN pattern styles
-add_action('wp_enqueue_scripts', function() {
-    $version = wp_get_theme()->get('Version');
-    wp_enqueue_style('bcn-patterns', get_template_directory_uri() . '/assets/css/patterns.css', [], $version);
+// Load BCN pattern styles only in editor
+add_action('enqueue_block_editor_assets', function() {
+    [$patterns_url, $patterns_ver] = bcn_asset('assets/css/patterns.css');
+    wp_enqueue_style('bcn-patterns', $patterns_url, [], $patterns_ver);
 });
 
 /**
@@ -193,6 +251,31 @@ require get_template_directory() . '/includes/community-features.php';
  * Member experience features
  */
 require get_template_directory() . '/includes/member-experience.php';
+
+/**
+ * REST API endpoints
+ */
+require get_template_directory() . '/includes/rest-api.php';
+
+/**
+ * Custom blocks
+ */
+require get_template_directory() . '/includes/blocks.php';
+
+/**
+ * Admin UI improvements
+ */
+require get_template_directory() . '/includes/admin-ui.php';
+
+/**
+ * WP-CLI commands
+ */
+require get_template_directory() . '/includes/wp-cli.php';
+
+/**
+ * Logging and error handling
+ */
+require get_template_directory() . '/includes/logging.php';
 
 /**
  * Add custom body classes

@@ -22,7 +22,7 @@
 <?php wp_body_open(); ?>
 
 <div id="page" class="site-container">
-    <a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e('Skip to content', 'bcn-wp-theme'); ?></a>
+    <a class="skip-link screen-reader-text" href="#primary" tabindex="1"><?php esc_html_e('Skip to main content', 'bcn-wp-theme'); ?></a>
 
     <header id="masthead" class="site-header">
         <div class="site-branding">
@@ -45,13 +45,17 @@
                 <p class="site-description"><?php echo $description; ?></p>
             <?php endif; ?>
 
-            <nav id="site-navigation" class="main-navigation">
+            <nav id="site-navigation" class="main-navigation" role="navigation" aria-label="<?php esc_attr_e('Primary Menu', 'bcn-wp-theme'); ?>">
                 <?php
                 wp_nav_menu(
                     array(
                         'theme_location' => 'primary',
                         'menu_id'        => 'primary-menu',
                         'fallback_cb'    => false,
+                        'container'      => false,
+                        'menu_class'     => 'nav-menu',
+                        'link_before'    => '<span class="nav-link-text">',
+                        'link_after'     => '</span>',
                     )
                 );
                 ?>

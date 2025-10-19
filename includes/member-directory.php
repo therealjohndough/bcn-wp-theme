@@ -9,42 +9,11 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Member post type is registered in includes/post-types.php
-
-/**
- * Register the Membership Level taxonomy.
- */
-function bcn_register_membership_level_taxonomy() {
-    $labels = array(
-        'name'              => _x('Membership Levels', 'taxonomy general name', 'bcn-wp-theme'),
-        'singular_name'     => _x('Membership Level', 'taxonomy singular name', 'bcn-wp-theme'),
-        'search_items'      => __('Search Membership Levels', 'bcn-wp-theme'),
-        'all_items'         => __('All Membership Levels', 'bcn-wp-theme'),
-        'parent_item'       => __('Parent Membership Level', 'bcn-wp-theme'),
-        'parent_item_colon' => __('Parent Membership Level:', 'bcn-wp-theme'),
-        'edit_item'         => __('Edit Membership Level', 'bcn-wp-theme'),
-        'update_item'       => __('Update Membership Level', 'bcn-wp-theme'),
-        'add_new_item'      => __('Add New Membership Level', 'bcn-wp-theme'),
-        'new_item_name'     => __('New Membership Level Name', 'bcn-wp-theme'),
-        'menu_name'         => __('Membership Levels', 'bcn-wp-theme'),
-    );
-
-    $args = array(
-        'hierarchical'      => false,
-        'labels'            => $labels,
-        'show_ui'           => true,
-        'show_admin_column' => true,
-        'query_var'         => true,
-        'rewrite'           => array('slug' => 'membership'),
-        'show_in_rest'      => true,
-    );
-
-    register_taxonomy('bcn_membership_level', array('bcn_member'), $args);
-}
-add_action('init', 'bcn_register_membership_level_taxonomy', 0);
+// Member post type and taxonomy are registered in includes/post-types.php
 
 /**
  * Ensure starter membership level terms exist.
+ * Only runs once on theme activation.
  */
 function bcn_seed_membership_levels() {
     $levels = array(
@@ -59,7 +28,17 @@ function bcn_seed_membership_levels() {
         }
     }
 }
-add_action('init', 'bcn_seed_membership_levels', 15);
+
+/**
+ * Theme activation hook to seed membership levels once.
+ */
+function bcn_theme_activation() {
+    if (!get_option('bcn_seed_done')) {
+        bcn_seed_membership_levels();
+        update_option('bcn_seed_done', 1, true);
+    }
+}
+add_action('after_switch_theme', 'bcn_theme_activation');
 
 /**
  * Register meta fields for members.
@@ -155,6 +134,16 @@ function bcn_register_member_meta() {
     );
 
     foreach ($meta_fields as $meta_key => $args) {
+        // Add auth callback for security
+        $args['auth_callback'] = function() {
+            return current_user_can('edit_posts');
+        };
+        
+        // Add sanitize callback for featured field
+        if ($meta_key === 'bcn_member_featured') {
+            $args['sanitize_callback'] = 'rest_sanitize_boolean';
+        }
+        
         register_post_meta('bcn_member', $meta_key, $args);
     }
 
@@ -424,13 +413,16 @@ add_action('save_post_bcn_member', 'bcn_save_member_meta');
  * @param WP_Query $query Current query object.
  */
 function bcn_filter_member_archive($query) {
-    if (is_admin() || !$query->is_main_query()) {
+    if (is_admin() || !$query->is_main_query() || !$query->is_post_type_archive('bcn_member')) {
         return;
     }
 
-    if ($query->is_post_type_archive('bcn_member')) {
-        if (!empty($_GET['membership_level'])) {
-            $level = sanitize_key(wp_unslash($_GET['membership_level']));
+    // Sanitize and validate membership level
+    $level = sanitize_key(get_query_var('membership_level'));
+    if ($level) {
+        // Validate against allowed levels
+        $allowed_levels = array('premier-member', 'pro-member', 'community-partner');
+        if (in_array($level, $allowed_levels, true)) {
             $query->set(
                 'tax_query',
                 array(
@@ -442,18 +434,21 @@ function bcn_filter_member_archive($query) {
                 )
             );
         }
+    }
 
-        if (!empty($_GET['featured_only'])) {
-            $query->set(
-                'meta_query',
+    // Sanitize and validate featured filter
+    $featured = (int) (get_query_var('featured_only') === '1');
+    if ($featured) {
+        $query->set(
+            'meta_query',
+            array(
                 array(
-                    array(
-                        'key'   => 'bcn_member_featured',
-                        'value' => 1,
-                    ),
-                )
-            );
-        }
+                    'key'   => 'bcn_member_featured',
+                    'value' => true,
+                    'compare' => '=',
+                ),
+            )
+        );
     }
 }
 add_action('pre_get_posts', 'bcn_filter_member_archive');
@@ -617,6 +612,13 @@ function bcn_render_member_onboarding_page() {
  * Handle onboarding form submission.
  */
 function bcn_handle_member_onboarding_form() {
+    // Check capabilities first
+    if (!current_user_can('manage_options')) {
+        add_settings_error('bcn_member_onboarding', 'bcn-member-onboarding-perms', __('You do not have permission to perform this action.', 'bcn-wp-theme'), 'error');
+        return false;
+    }
+
+    // Verify nonce
     if (!isset($_POST['bcn_member_onboarding_nonce']) || !wp_verify_nonce($_POST['bcn_member_onboarding_nonce'], 'bcn_member_onboarding')) {
         add_settings_error('bcn_member_onboarding', 'bcn-member-onboarding-nonce', __('Security check failed. Please try again.', 'bcn-wp-theme'), 'error');
         return false;
@@ -935,6 +937,7 @@ function bcn_member_submission_form_shortcode($atts) {
     $success_message = '';
 
     if (!empty($_POST['bcn_member_submission_form_submitted'])) {
+        // Verify nonce first
         if (!isset($_POST['bcn_member_submission_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['bcn_member_submission_nonce'])), 'bcn_member_submit_content')) {
             $errors[] = __('Your session expired. Please try submitting the form again.', 'bcn-wp-theme');
         } else {

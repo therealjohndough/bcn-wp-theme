@@ -1,23 +1,33 @@
 <?xml version="1.0"?>
 <ruleset name="BCN WP Theme">
-    <description>PHP_CodeSniffer ruleset for BCN WP Theme using WordPress Coding Standards</description>
-
-    <!-- Use WordPress ruleset as base -->
-    <rule ref="WordPress" />
-
-    <!-- Exclude vendor files -->
-    <file>./</file>
-    <exclude-pattern>vendor/*</exclude-pattern>
-    <exclude-pattern>node_modules/*</exclude-pattern>
-    <exclude-pattern>preview/*</exclude-pattern>
-    <exclude-pattern>assets/*</exclude-pattern>
-</ruleset>
-<?xml version="1.0"?>
-<ruleset name="BCN WP Theme">
     <description>WordPress Coding Standards for BCN WP Theme</description>
+    
+    <!-- Use WordPress ruleset as base -->
     <rule ref="WordPress"/>
+    
+    <!-- Exclude vendor and build files -->
     <exclude-pattern>vendor/*</exclude-pattern>
     <exclude-pattern>node_modules/*</exclude-pattern>
     <exclude-pattern>assets/*</exclude-pattern>
     <exclude-pattern>preview/*</exclude-pattern>
+    <exclude-pattern>test-results/*</exclude-pattern>
+    
+    <!-- Set severity for escaping rules -->
+    <rule ref="WordPress.Security.EscapeOutput">
+        <severity>5</severity>
+    </rule>
+    
+    <!-- Allow short array syntax -->
+    <rule ref="Generic.Arrays.DisallowShortArraySyntax">
+        <severity>0</severity>
+    </rule>
+    
+    <!-- Allow short ternary -->
+    <rule ref="WordPress.PHP.DisallowShortTernary">
+        <severity>0</severity>
+    </rule>
+    
+    <!-- Set minimum PHP version -->
+    <config name="minimum_supported_wp_version" value="5.0"/>
+    <config name="testVersion" value="7.4-"/>
 </ruleset>
