@@ -129,6 +129,13 @@ function bcn_scripts() {
     // Enqueue custom scripts
     wp_enqueue_script('bcn-navigation', get_template_directory_uri() . '/assets/js/navigation.js', array(), '1.0.0', true);
     wp_enqueue_script('bcn-main', get_template_directory_uri() . '/assets/js/main.js', array('jquery'), '1.0.0', true);
+    
+    // Enqueue enhanced member cards assets
+    if (is_post_type_archive('bcn_member') || is_singular('bcn_member')) {
+        wp_enqueue_style('bcn-member-cards-enhanced', get_template_directory_uri() . '/assets/css/member-cards-enhanced.css', array(), '1.0.0');
+        wp_enqueue_style('bcn-member-archive-enhanced', get_template_directory_uri() . '/assets/css/member-archive-enhanced.css', array('bcn-member-cards-enhanced'), '1.0.0');
+        wp_enqueue_script('bcn-member-cards-enhanced', get_template_directory_uri() . '/assets/js/member-cards-enhanced.js', array('jquery'), '1.0.0', true);
+    }
 
     // Add inline script for smooth scroll
     wp_add_inline_script('bcn-main', 'var bcnTheme = ' . json_encode(array(
@@ -181,6 +188,11 @@ require get_template_directory() . '/includes/post-types.php';
  * Community features
  */
 require get_template_directory() . '/includes/community-features.php';
+
+/**
+ * Member experience features
+ */
+require get_template_directory() . '/includes/member-experience.php';
 
 /**
  * Add custom body classes
