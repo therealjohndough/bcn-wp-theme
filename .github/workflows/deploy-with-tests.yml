@@ -23,7 +23,7 @@ on:
 
 env:
   THEME_NAME: 'bcn-wp-theme'
-  STAGING_URL: 'https://staging6.buffalocannabisnetwork.com'
+  STAGING_URL: 'https://staging19.casestudy-labs.com'
   PRODUCTION_URL: 'https://buffalocannabisnetwork.com'
 
 jobs:
@@ -93,7 +93,7 @@ jobs:
           find scripts -name "*.sh" -exec ls -la {} \;
 
       - name: 📊 Upload validation reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: validation-reports
@@ -200,7 +200,7 @@ jobs:
           echo "## Commit: ${{ github.sha }}" >> test-report.md
 
       - name: 📤 Upload test report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-report
           path: test-report.md
@@ -249,7 +249,7 @@ jobs:
           find build -type f | sort >> build/BUILD_MANIFEST.txt
 
       - name: 📤 Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: theme-build
           path: build/
@@ -263,7 +263,7 @@ jobs:
     environment: staging
     steps:
       - name: 📥 Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: theme-build
           path: build/
@@ -273,7 +273,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SG_DEPLOY_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SG_HOST || 'staging6.buffalocannabisnetwork.com' }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.SG_HOST || 'staging19.casestudy-labs.com' }} >> ~/.ssh/known_hosts
 
       - name: 🚀 Deploy to staging
         run: |
@@ -288,7 +288,7 @@ jobs:
           
           # Set deployment variables
           SOURCE="./build"
-          HOST="${{ secrets.SG_HOST || 'staging6.buffalocannabisnetwork.com' }}"
+          HOST="${{ secrets.SG_HOST || 'staging19.casestudy-labs.com' }}"
           USER="${{ secrets.SG_USER || 'deploy' }}"
           PORT="${{ secrets.SG_PORT || '22' }}"
           REMOTE_PATH="${{ secrets.SG_REMOTE_PATH || '/public_html/wp-content/themes/bcn-wp-theme' }}"
@@ -317,7 +317,7 @@ jobs:
           
           # Test staging site accessibility
           echo "🔍 Testing staging site accessibility..."
-          if curl -s -o /dev/null -w "%{http_code}" https://staging6.buffalocannabisnetwork.com | grep -q "200"; then
+          if curl -s -o /dev/null -w "%{http_code}" https://staging19.casestudy-labs.com | grep -q "200"; then
             echo "✅ Staging site is accessible"
           else
             echo "❌ Staging site is not accessible"
@@ -326,7 +326,7 @@ jobs:
           
           # Test member directory page
           echo "🔍 Testing member directory..."
-          if curl -s https://staging6.buffalocannabisnetwork.com/members/ | grep -q "Member Directory"; then
+          if curl -s https://staging19.casestudy-labs.com/members/ | grep -q "Member Directory"; then
             echo "✅ Member directory is working"
           else
             echo "⚠️ Member directory may not be working properly"
@@ -337,7 +337,7 @@ jobs:
           echo "# Deployment Report" > deployment-report.md
           echo "## Deployment Details" >> deployment-report.md
           echo "- **Environment**: Staging" >> deployment-report.md
-          echo "- **URL**: https://staging6.buffalocannabisnetwork.com" >> deployment-report.md
+          echo "- **URL**: https://staging19.casestudy-labs.com" >> deployment-report.md
           echo "- **Date**: $(date)" >> deployment-report.md
           echo "- **Commit**: ${{ github.sha }}" >> deployment-report.md
           echo "- **Branch**: ${{ github.ref_name }}" >> deployment-report.md
@@ -353,7 +353,7 @@ jobs:
           echo "4. Deploy to production if tests pass" >> deployment-report.md
 
       - name: 📤 Upload deployment report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: deployment-report
           path: deployment-report.md
@@ -363,7 +363,7 @@ jobs:
         run: |
           if [ "${{ job.status }}" == "success" ]; then
             echo "🎉 Deployment to staging completed successfully!"
-            echo "🔗 Staging URL: https://staging6.buffalocannabisnetwork.com"
+            echo "🔗 Staging URL: https://staging19.casestudy-labs.com"
           else
             echo "❌ Deployment to staging failed!"
             echo "Check the logs for details."
@@ -378,7 +378,7 @@ jobs:
     environment: production
     steps:
       - name: 📥 Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: theme-build
           path: build/

@@ -11,10 +11,10 @@ cd "$ROOT_DIR"
 
 SRC=${SOURCE:-./build}
 KEY=${KEY:-$HOME/.ssh/siteground_id}
-HOST=${HOST:-staging6.buffalocannabisnetwork.com}
+HOST=${HOST:-staging19.casestudy-labs.com}
 USER=${USER:-u2037-2lvglkrliykq}
 PORT=${PORT:-18765}
-REMOTE_PATH=${REMOTE_PATH:-/home/u2037-2lvglkrliykq/staging6.buffalocannabisnetwork.com/public_html/wp-content/themes/bcn-wp-theme}
+REMOTE_PATH=${REMOTE_PATH:-/home/u2037-2lvglkrliykq/staging19.casestudy-labs.com/public_html/wp-content/themes/bcn-wp-theme}
 DRY_RUN=${DRY_RUN:-1}
 PUSH_GIT=${PUSH_GIT:-0}
 
