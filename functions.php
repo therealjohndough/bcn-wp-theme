@@ -117,8 +117,10 @@ function bcn_admin_setup_notice() {
     // Check if member post type exists
     if (!post_type_exists('bcn_member')) {
         echo '<div class="notice notice-error is-dismissible">';
-        echo '<p><strong>BCN Theme:</strong> Member post type not found. <a href="' . admin_url('themes.php') . '">Reactivate the theme</a> or <a href="' . home_url('/wp-content/themes/bcn-wp-theme/setup-theme.php') . '" target="_blank">run setup script</a></p>';
-        echo '</div>';
+        echo '<p><strong>BCN Theme:</strong> Member post type not found. ';
+        echo '<a href="' . admin_url('themes.php') . '">Reactivate the theme</a> or ';
+        echo '<a href="' . admin_url('admin.php?action=bcn_force_setup') . '" class="button button-primary">Force Setup Now</a>';
+        echo '</p></div>';
         return;
     }
     
@@ -131,6 +133,55 @@ function bcn_admin_setup_notice() {
     }
 }
 add_action('admin_notices', 'bcn_admin_setup_notice');
+
+/**
+ * Add admin action to force setup
+ */
+function bcn_add_admin_actions() {
+    if (current_user_can('manage_options')) {
+        add_action('admin_action_bcn_force_setup', 'bcn_handle_force_setup');
+    }
+}
+add_action('admin_init', 'bcn_add_admin_actions');
+
+function bcn_handle_force_setup() {
+    if (!current_user_can('manage_options')) {
+        wp_die('Unauthorized');
+    }
+    
+    // Force register post types and taxonomies
+    bcn_register_post_types();
+    bcn_register_taxonomies();
+    
+    // Import ACF field groups
+    if (function_exists('bcn_import_acf_field_groups')) {
+        bcn_import_acf_field_groups();
+    }
+    
+    // Create default membership levels
+    if (function_exists('bcn_create_default_membership_levels')) {
+        bcn_create_default_membership_levels();
+    }
+    
+    // Flush rewrite rules
+    flush_rewrite_rules();
+    
+    // Redirect back with success message
+    wp_redirect(admin_url('edit.php?post_type=bcn_member&bcn_setup=success'));
+    exit;
+}
+
+/**
+ * Show setup success message
+ */
+function bcn_show_setup_success() {
+    if (isset($_GET['bcn_setup']) && $_GET['bcn_setup'] === 'success') {
+        echo '<div class="notice notice-success is-dismissible">';
+        echo '<p><strong>BCN Theme:</strong> Setup completed successfully! Post types and taxonomies have been registered.</p>';
+        echo '</div>';
+    }
+}
+add_action('admin_notices', 'bcn_show_setup_success');
 
 /**
  * Set the content width in pixels
