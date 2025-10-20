@@ -23,10 +23,12 @@ function bcn_handle_member_registration() {
     // Sanitize and validate input
     $member_data = array(
         'name' => sanitize_text_field($_POST['member_name'] ?? ''),
+        'contact_person' => sanitize_text_field($_POST['member_name'] ?? ''),
         'company' => sanitize_text_field($_POST['member_company'] ?? ''),
         'email' => sanitize_email($_POST['member_email'] ?? ''),
         'phone' => sanitize_text_field($_POST['member_phone'] ?? ''),
         'website' => esc_url_raw($_POST['member_website'] ?? ''),
+        'address' => sanitize_textarea_field($_POST['member_address'] ?? ''),
         'description' => sanitize_textarea_field($_POST['member_description'] ?? ''),
         'membership_level' => sanitize_text_field($_POST['membership_level'] ?? 'pro-member'),
         'featured' => isset($_POST['member_featured']) ? 1 : 0,
@@ -63,12 +65,14 @@ function bcn_handle_member_registration() {
         'post_type' => 'bcn_member',
         'meta_input' => array(
             'bcn_member_company' => $member_data['company'],
+            'bcn_member_contact_person' => $member_data['contact_person'],
             'bcn_member_email' => $member_data['email'],
             'bcn_member_phone' => $member_data['phone'],
             'bcn_member_website' => $member_data['website'],
+            'bcn_member_address' => $member_data['address'],
             'bcn_member_featured' => $member_data['featured'],
             'bcn_member_registration_date' => current_time('mysql'),
-            'bcn_member_status' => 'active',
+            'bcn_member_status' => 'pending',
         )
     );
     
@@ -262,15 +266,15 @@ function bcn_member_registration_form_shortcode($atts) {
             
             <div class="bcn-member-registration-form__row">
                 <div class="bcn-member-registration-form__field">
-                    <label for="member_name" class="bcn-member-registration-form__label">Name *</label>
+                    <label for="member_name" class="bcn-member-registration-form__label">Contact Person Name *</label>
                     <input type="text" id="member_name" name="member_name" 
                            class="bcn-member-registration-form__input" required>
                 </div>
                 
                 <div class="bcn-member-registration-form__field">
-                    <label for="member_company" class="bcn-member-registration-form__label">Company</label>
+                    <label for="member_company" class="bcn-member-registration-form__label">Company Name *</label>
                     <input type="text" id="member_company" name="member_company" 
-                           class="bcn-member-registration-form__input">
+                           class="bcn-member-registration-form__input" required>
                 </div>
             </div>
             
@@ -293,6 +297,13 @@ function bcn_member_registration_form_shortcode($atts) {
                 <input type="url" id="member_website" name="member_website" 
                        class="bcn-member-registration-form__input" 
                        placeholder="https://example.com">
+            </div>
+            
+            <div class="bcn-member-registration-form__field">
+                <label for="member_address" class="bcn-member-registration-form__label">Business Address</label>
+                <textarea id="member_address" name="member_address" rows="3"
+                          class="bcn-member-registration-form__textarea"
+                          placeholder="Enter your business address"></textarea>
             </div>
             
             <div class="bcn-member-registration-form__field">

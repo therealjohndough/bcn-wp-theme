@@ -275,5 +275,9 @@ add_action('wp_enqueue_scripts', 'bcn_enqueue_scripts');
 /**
  * Include additional functionality
  */
+require_once get_template_directory() . '/includes/post-types.php';
+require_once get_template_directory() . '/includes/acf-import.php';
+require_once get_template_directory() . '/includes/member-directory.php';
+require_once get_template_directory() . '/includes/member-experience.php';
 require_once get_template_directory() . '/includes/member-registration.php';
 require_once get_template_directory() . '/includes/member-marquee-shortcodes.php';
