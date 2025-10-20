@@ -76,6 +76,63 @@ function bcn_theme_setup() {
 add_action('after_setup_theme', 'bcn_theme_setup');
 
 /**
+ * Force theme setup on activation
+ */
+function bcn_force_theme_setup() {
+    // Force post type and taxonomy registration
+    bcn_register_post_types();
+    bcn_register_taxonomies();
+    
+    // Import ACF field groups
+    if (function_exists('bcn_import_acf_field_groups')) {
+        bcn_import_acf_field_groups();
+    }
+    
+    // Create default membership levels
+    if (function_exists('bcn_create_default_membership_levels')) {
+        bcn_create_default_membership_levels();
+    }
+    
+    // Flush rewrite rules
+    flush_rewrite_rules();
+}
+add_action('init', 'bcn_force_theme_setup', 20);
+
+/**
+ * Admin notice for theme setup
+ */
+function bcn_admin_setup_notice() {
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+    
+    // Check if ACF is active
+    if (!function_exists('acf_get_setting')) {
+        echo '<div class="notice notice-warning is-dismissible">';
+        echo '<p><strong>BCN Theme:</strong> Advanced Custom Fields Pro is required. <a href="' . admin_url('plugin-install.php?s=advanced+custom+fields+pro&tab=search&type=term') . '">Install ACF Pro</a></p>';
+        echo '</div>';
+        return;
+    }
+    
+    // Check if member post type exists
+    if (!post_type_exists('bcn_member')) {
+        echo '<div class="notice notice-error is-dismissible">';
+        echo '<p><strong>BCN Theme:</strong> Member post type not found. <a href="' . admin_url('themes.php') . '">Reactivate the theme</a> or <a href="' . home_url('/wp-content/themes/bcn-wp-theme/setup-theme.php') . '" target="_blank">run setup script</a></p>';
+        echo '</div>';
+        return;
+    }
+    
+    // Check if ACF field groups are imported
+    $member_fields = acf_get_field_group('group_bcn_member_details');
+    if (!$member_fields) {
+        echo '<div class="notice notice-info is-dismissible">';
+        echo '<p><strong>BCN Theme:</strong> <a href="' . admin_url('edit.php?post_type=acf-field-group&page=acf-tools&tab=import') . '">Import ACF field groups</a> for full functionality.</p>';
+        echo '</div>';
+    }
+}
+add_action('admin_notices', 'bcn_admin_setup_notice');
+
+/**
  * Set the content width in pixels
  */
 function bcn_content_width() {
