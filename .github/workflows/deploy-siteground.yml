@@ -53,7 +53,7 @@ jobs:
           SG_HOST: staging6.buffalocannabisnetwork.com
           SG_USER: u2037-2lvglkrliykq
           SG_PORT: '18765'
-          SG_REMOTE_PATH: /home/u2037-2lvglkrliykq/staging6.buffalocannabisnetwork.com/public_html/wp-content/themes/bcn-wp-theme
+          SG_REMOTE_PATH: /home/u2037-2lvglkrliykq/staging6.buffalocannabisnetwork.com/public_html/wp-content/themes/buffalo-cannabis-network
           SOURCE: '.'
           # Allow DRY_RUN to be controlled via either: workflow_dispatch input `live` OR repository secret `DRY_RUN`.
           INPUT_LIVE: ${{ github.event.inputs.live }}
