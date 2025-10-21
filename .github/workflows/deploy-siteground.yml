@@ -54,13 +54,13 @@ jobs:
           SG_USER: u2037-2lvglkrliykq
           SG_PORT: '18765'
           SG_REMOTE_PATH: /home/u2037-2lvglkrliykq/staging6.buffalocannabisnetwork.com/public_html/wp-content/themes/bcn-wp-theme
-          SOURCE: './build'
+          SOURCE: '.'
           # Allow DRY_RUN to be controlled via either: workflow_dispatch input `live` OR repository secret `DRY_RUN`.
           INPUT_LIVE: ${{ github.event.inputs.live }}
           DRY_RUN: ${{ secrets.DRY_RUN }}
         run: |
           : "Deploying $SOURCE to $SG_USER@$SG_HOST:$SG_REMOTE_PATH"
-          RSYNC_OPTS='-az --delete --exclude .git --exclude node_modules --exclude .env --verbose'
+          RSYNC_OPTS='-az --delete --exclude .git --exclude node_modules --exclude .env --exclude build --verbose'
           SSH_CMD="ssh -i ~/.ssh/id_siteground -p ${SG_PORT} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
           # Create remote directory if it doesn't exist
           echo "Creating remote directory..."
