@@ -60,7 +60,7 @@ jobs:
           DRY_RUN: ${{ secrets.DRY_RUN }}
         run: |
           : "Deploying $SOURCE to $SG_USER@$SG_HOST:$SG_REMOTE_PATH"
-          RSYNC_OPTS='-az --delete --exclude .git --exclude node_modules --exclude .env --exclude build --verbose'
+          RSYNC_OPTS='-az --delete --exclude .git --exclude node_modules --exclude .env --exclude build --exclude vendor --exclude archive --exclude "*.md" --exclude composer.* --exclude docker-compose.yml --exclude phpcs.xml.dist --exclude preview --exclude scripts --exclude .github --verbose'
           SSH_CMD="ssh -i ~/.ssh/id_siteground -p ${SG_PORT} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
           # Create remote directory if it doesn't exist
           echo "Creating remote directory..."
