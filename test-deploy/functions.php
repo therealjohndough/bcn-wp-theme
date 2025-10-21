@@ -31,9 +31,9 @@ function bcn_theme_setup() {
 
     // Register navigation menus
     register_nav_menus(array(
-        'primary' => __('Primary Menu', 'bcn-wp-theme'),
-        'footer'  => __('Footer Menu', 'bcn-wp-theme'),
-        'community' => __('Community Menu', 'bcn-wp-theme'),
+        'primary' => __('Primary Menu', 'buffalo-cannabis-network'),
+        'footer'  => __('Footer Menu', 'buffalo-cannabis-network'),
+        'community' => __('Community Menu', 'buffalo-cannabis-network'),
     ));
 
     // Switch default core markup to output valid HTML5
@@ -88,9 +88,9 @@ add_action('after_setup_theme', 'bcn_content_width', 0);
  */
 function bcn_widgets_init() {
     register_sidebar(array(
-        'name'          => __('Sidebar', 'bcn-wp-theme'),
+        'name'          => __('Sidebar', 'buffalo-cannabis-network'),
         'id'            => 'sidebar-1',
-        'description'   => __('Add widgets here to appear in your sidebar.', 'bcn-wp-theme'),
+        'description'   => __('Add widgets here to appear in your sidebar.', 'buffalo-cannabis-network'),
         'before_widget' => '<section id="%1$s" class="widget %2$s">',
         'after_widget'  => '</section>',
         'before_title'  => '<h2 class="widget-title">',
@@ -98,9 +98,9 @@ function bcn_widgets_init() {
     ));
 
     register_sidebar(array(
-        'name'          => __('Footer Widget Area', 'bcn-wp-theme'),
+        'name'          => __('Footer Widget Area', 'buffalo-cannabis-network'),
         'id'            => 'footer-1',
-        'description'   => __('Add widgets here to appear in your footer.', 'bcn-wp-theme'),
+        'description'   => __('Add widgets here to appear in your footer.', 'buffalo-cannabis-network'),
         'before_widget' => '<div id="%1$s" class="footer-widget %2$s">',
         'after_widget'  => '</div>',
         'before_title'  => '<h3 class="widget-title">',
@@ -108,9 +108,9 @@ function bcn_widgets_init() {
     ));
 
     register_sidebar(array(
-        'name'          => __('Community Widget Area', 'bcn-wp-theme'),
+        'name'          => __('Community Widget Area', 'buffalo-cannabis-network'),
         'id'            => 'community-1',
-        'description'   => __('Add widgets here for community features.', 'bcn-wp-theme'),
+        'description'   => __('Add widgets here for community features.', 'buffalo-cannabis-network'),
         'before_widget' => '<div id="%1$s" class="community-widget %2$s">',
         'after_widget'  => '</div>',
         'before_title'  => '<h3 class="widget-title">',
