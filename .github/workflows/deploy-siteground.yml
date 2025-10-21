@@ -80,7 +80,7 @@ jobs:
             echo "Performing live deployment..."
             rsync $RSYNC_OPTS -e "$SSH_CMD" "${SOURCE%/}/" "$SG_USER@$SG_HOST:$SG_REMOTE_PATH/"
             echo "Deployment completed. Cleaning up unwanted files and ensuring correct theme files..."
-            $SSH_CMD "$SG_USER@$SG_HOST" "cd $SG_REMOTE_PATH && rm -rf .cursor .github archive vendor build && rm -f *.md composer.* docker-compose.yml phpcs.xml.dist .env.example .gitignore .eslintrc.json .prettierrc.json .deployment-trigger .cursorignore LICENSE && rm -f *.tar.gz *.zip && rm -f functions-minimal.php setup-theme.php test-theme.php"
+            $SSH_CMD "$SG_USER@$SG_HOST" "cd $SG_REMOTE_PATH && rm -rf .cursor .github archive vendor build && rm -f *.md composer.* docker-compose.yml phpcs.xml.dist .env.example .gitignore .eslintrc.json .prettierrc.json .deployment-trigger .cursorignore LICENSE && rm -f *.tar.gz *.zip && rm -f functions-minimal.php setup-theme.php test-theme.php && rm -f *.bak"
             echo "Cleanup completed. Verifying files..."
             $SSH_CMD "$SG_USER@$SG_HOST" "ls -la $SG_REMOTE_PATH/"
           fi
