@@ -60,8 +60,11 @@ jobs:
           DRY_RUN: ${{ secrets.DRY_RUN }}
         run: |
           : "Deploying $SOURCE to $SG_USER@$SG_HOST:$SG_REMOTE_PATH"
-          RSYNC_OPTS='-az --delete --exclude .git --exclude node_modules --exclude .env'
+          RSYNC_OPTS='-az --delete --exclude .git --exclude node_modules --exclude .env --verbose'
           SSH_CMD="ssh -i ~/.ssh/id_siteground -p ${SG_PORT} -o IdentitiesOnly=yes -o StrictHostKeyChecking=no"
+          # Create remote directory if it doesn't exist
+          echo "Creating remote directory..."
+          $SSH_CMD "$SG_USER@$SG_HOST" "mkdir -p $SG_REMOTE_PATH"
           # Determine whether to perform a live deploy:
           # - If the workflow was manually dispatched with input live=true, perform live deploy
           # - Else, if repository secret DRY_RUN is set to '0', perform live deploy
@@ -74,5 +77,8 @@ jobs:
           if [ "$DRY_RUN" = "1" ] || [ -z "$DRY_RUN" ]; then
             echo "DRY RUN: rsync $RSYNC_OPTS -n -e \"$SSH_CMD\" \"${SOURCE%/}/\" \"$SG_USER@$SG_HOST:$SG_REMOTE_PATH/\""
           else
+            echo "Performing live deployment..."
             rsync $RSYNC_OPTS -e "$SSH_CMD" "${SOURCE%/}/" "$SG_USER@$SG_HOST:$SG_REMOTE_PATH/"
+            echo "Deployment completed. Verifying files..."
+            $SSH_CMD "$SG_USER@$SG_HOST" "ls -la $SG_REMOTE_PATH/"
           fi
