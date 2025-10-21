@@ -147,6 +147,12 @@ add_action('wp_enqueue_scripts', 'bcn_scripts');
 add_action('wp_enqueue_scripts', function() {
     $version = wp_get_theme()->get('Version');
     wp_enqueue_style('bcn-patterns', get_template_directory_uri() . '/assets/css/patterns.css', [], $version);
+    
+    // Enqueue member portal styles
+    if (is_page('member-portal') || is_page_template('page-member-portal.php')) {
+        wp_enqueue_style('bcn-member-portal', get_template_directory_uri() . '/assets/css/member-portal.css', [], $version);
+        wp_enqueue_style('bcn-member-dashboard', get_template_directory_uri() . '/assets/css/member-dashboard.css', [], $version);
+    }
 });
 
 /**
@@ -181,6 +187,46 @@ require get_template_directory() . '/includes/post-types.php';
  * Community features
  */
 require get_template_directory() . '/includes/community-features.php';
+
+/**
+ * Custom Admin Theme
+ */
+require get_template_directory() . '/admin-theme/admin-theme.php';
+
+/**
+ * ACF Field Groups
+ */
+require get_template_directory() . '/includes/acf-fields/acf-field-groups.php';
+
+/**
+ * Custom Post Types
+ */
+require get_template_directory() . '/includes/custom-post-types/custom-post-types.php';
+
+/**
+ * Automation Features
+ */
+require get_template_directory() . '/includes/automation/automation.php';
+
+/**
+ * Enhanced Testimonial System
+ */
+require get_template_directory() . '/includes/enhanced-testimonial-system.php';
+
+/**
+ * Blog Submission System
+ */
+require get_template_directory() . '/includes/blog-submission-system.php';
+
+/**
+ * Member Dashboard System
+ */
+require get_template_directory() . '/includes/member-dashboard-system.php';
+
+/**
+ * Submission Workflows
+ */
+require get_template_directory() . '/includes/submission-workflows.php';
 
 /**
  * Add custom body classes

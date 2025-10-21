@@ -6,6 +6,15 @@ A custom WordPress theme for Buffalo Cannabis Network - a marketing and communit
 
 This theme provides a robust, maintainable foundation for building a community-driven marketing platform. It includes modern WordPress best practices, responsive design, and custom post types specifically designed for community engagement.
 
+## 📚 Documentation
+
+For comprehensive information about this theme, please refer to our detailed documentation:
+
+- **[Master Plan](BCN_MASTER_PLAN.md)** - Complete implementation overview and feature matrix
+- **[Technical Specifications](TECHNICAL_SPECIFICATIONS.md)** - Developer reference and technical details
+- **[Development Roadmap](DEVELOPMENT_ROADMAP.md)** - Project timeline and future enhancements
+- **[Design Team Audit](DESIGN_TEAM_AUDIT_SUMMARY.md)** - Design system specifications and status
+
 ## Features
 
 ### Core Features
@@ -13,16 +22,25 @@ This theme provides a robust, maintainable foundation for building a community-d
 - ✅ Custom color scheme optimized for cannabis branding
 - ✅ Modern WordPress theme structure
 - ✅ HTML5 semantic markup
-- ✅ Accessibility-ready
-- ✅ SEO-friendly
+- ✅ Accessibility-ready (WCAG 2.1 AA)
+- ✅ SEO-friendly with schema markup
 - ✅ Translation-ready
 
+### Advanced Features
+- ✅ **Custom Admin Theme** - Complete custom admin interface
+- ✅ **ACF Pro Integration** - Advanced custom fields for all content types
+- ✅ **Member Portal** - Complete member dashboard with achievements
+- ✅ **Submission Systems** - Testimonial and blog post submission workflows
+- ✅ **Automation Systems** - Content, member, and event automation
+- ✅ **Approval Workflows** - Admin submission management and review
+
 ### Community Features
-- ✅ Custom post types (Events, Members)
-- ✅ Custom taxonomies (Event Categories)
-- ✅ Community widget areas
-- ✅ Event management system
-- ✅ Member profiles
+- ✅ Custom post types (Events, News, Members, Resources, Testimonials)
+- ✅ Custom taxonomies (Event Types, News Categories, Membership Levels)
+- ✅ Member directory with profiles
+- ✅ Event management system with registration
+- ✅ Achievement system with points and badges
+- ✅ Content submission and approval workflows
 
 ### Design Features
 - ✅ CSS custom properties for easy theming
@@ -31,6 +49,7 @@ This theme provides a robust, maintainable foundation for building a community-d
 - ✅ Custom background support
 - ✅ Multiple widget areas (Sidebar, Footer, Community)
 - ✅ Three navigation menu locations
+- ✅ Component library with reusable elements
 
 ### Developer Features
 - ✅ Clean, well-documented code
@@ -39,6 +58,7 @@ This theme provides a robust, maintainable foundation for building a community-d
 - ✅ Custom template tags
 - ✅ Modular file structure
 - ✅ Editor styles support
+- ✅ Advanced automation hooks and filters
 
 ## Installation
 
