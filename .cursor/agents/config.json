@@ -1,0 +1,95 @@
+{
+  "agents": {
+    "code-quality": {
+      "enabled": true,
+      "triggers": ["file-change", "pre-commit"],
+      "watch": ["**/*.php", "**/*.js", "**/*.css"],
+      "commands": [
+        "phpcs --standard=WordPress .",
+        "eslint assets/js/",
+        "prettier --check assets/css/"
+      ],
+      "output": ".cursor/agents/logs/code-quality.log"
+    },
+    "performance": {
+      "enabled": true,
+      "triggers": ["post-deploy", "scheduled"],
+      "schedule": "0 9 * * *",
+      "commands": [
+        "lighthouse https://staging6.buffalocannabisnetwork.com --output=json --output-path=.cursor/agents/reports/lighthouse.json",
+        "curl -s https://staging6.buffalocannabisnetwork.com | wc -c > .cursor/agents/reports/page-size.txt"
+      ],
+      "thresholds": {
+        "performance": 90,
+        "accessibility": 90,
+        "seo": 90,
+        "best-practices": 90
+      }
+    },
+    "security": {
+      "enabled": true,
+      "triggers": ["file-change", "daily"],
+      "schedule": "0 2 * * *",
+      "commands": [
+        "composer audit",
+        "npm audit",
+        "wp-cli core verify-checksums"
+      ],
+      "output": ".cursor/agents/logs/security.log"
+    },
+    "deployment": {
+      "enabled": true,
+      "triggers": ["manual", "github-webhook"],
+      "environments": {
+        "staging": {
+          "url": "https://staging6.buffalocannabisnetwork.com",
+          "ssh": "u2037-2lvglkrliykq@staging6.buffalocannabisnetwork.com:18765"
+        },
+        "production": {
+          "url": "https://buffalocannabisnetwork.com",
+          "ssh": "u2037-2lvglkrliykq@buffalocannabisnetwork.com:18765"
+        }
+      },
+      "pre-deploy": [
+        "run-tests",
+        "build-assets",
+        "security-scan"
+      ],
+      "post-deploy": [
+        "health-check",
+        "performance-check",
+        "cache-warm"
+      ]
+    },
+    "content": {
+      "enabled": true,
+      "triggers": ["acf-change", "content-update"],
+      "watch": ["acf-json/", "template-parts/"],
+      "commands": [
+        "wp acf sync",
+        "wp rewrite flush",
+        "wp cache flush"
+      ],
+      "output": ".cursor/agents/logs/content.log"
+    }
+  },
+  "notifications": {
+    "slack": {
+      "enabled": false,
+      "webhook": "SLACK_WEBHOOK_URL"
+    },
+    "discord": {
+      "enabled": false,
+      "webhook": "DISCORD_WEBHOOK_URL"
+    },
+    "email": {
+      "enabled": true,
+      "recipients": ["john@buffalocannabisnetwork.com"]
+    }
+  },
+  "logging": {
+    "level": "info",
+    "retention": "30d",
+    "format": "json"
+  }
+}

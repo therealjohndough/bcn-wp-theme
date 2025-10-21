@@ -1,0 +1,161 @@
+{
+  "dataScience": {
+    "enabled": true,
+    "tools": {
+      "jupyter": {
+        "enabled": true,
+        "notebooks": [
+          {
+            "name": "member-analytics",
+            "path": ".cursor/notebooks/member-analytics.ipynb",
+            "description": "Analyze member engagement and directory performance"
+          },
+          {
+            "name": "event-analytics", 
+            "path": ".cursor/notebooks/event-analytics.ipynb",
+            "description": "Track event performance and attendance patterns"
+          },
+          {
+            "name": "content-analytics",
+            "path": ".cursor/notebooks/content-analytics.ipynb", 
+            "description": "Analyze news content performance and SEO metrics"
+          },
+          {
+            "name": "performance-analytics",
+            "path": ".cursor/notebooks/performance-analytics.ipynb",
+            "description": "Website performance and Core Web Vitals analysis"
+          }
+        ]
+      },
+      "python": {
+        "enabled": true,
+        "version": "3.9+",
+        "packages": [
+          "pandas",
+          "numpy", 
+          "matplotlib",
+          "seaborn",
+          "plotly",
+          "requests",
+          "beautifulsoup4",
+          "wordpress-api",
+          "lighthouse-python",
+          "scikit-learn"
+        ],
+        "scripts": [
+          {
+            "name": "member-data-extractor",
+            "path": ".cursor/scripts/member-data-extractor.py",
+            "description": "Extract member data from WordPress database"
+          },
+          {
+            "name": "performance-analyzer",
+            "path": ".cursor/scripts/performance-analyzer.py",
+            "description": "Analyze Lighthouse and performance data"
+          },
+          {
+            "name": "seo-analyzer",
+            "path": ".cursor/scripts/seo-analyzer.py",
+            "description": "Analyze SEO metrics and content performance"
+          }
+        ]
+      },
+      "r": {
+        "enabled": false,
+        "version": "4.0+",
+        "packages": ["ggplot2", "dplyr", "tidyr", "jsonlite"]
+      }
+    },
+    "dataSources": {
+      "wordpress": {
+        "type": "database",
+        "connection": "wp-config.php",
+        "tables": ["wp_posts", "wp_postmeta", "wp_users", "wp_usermeta"],
+        "queries": {
+          "members": "SELECT * FROM wp_posts WHERE post_type = 'bcn_member'",
+          "events": "SELECT * FROM wp_posts WHERE post_type = 'events'",
+          "news": "SELECT * FROM wp_posts WHERE post_type = 'news'"
+        }
+      },
+      "analytics": {
+        "type": "api",
+        "provider": "google-analytics",
+        "version": "v4",
+        "metrics": ["sessions", "pageviews", "bounceRate", "avgSessionDuration"]
+      },
+      "performance": {
+        "type": "file",
+        "path": ".cursor/agents/reports/",
+        "formats": ["json", "csv"],
+        "files": ["lighthouse-*.json", "performance-*.json"]
+      }
+    },
+    "visualizations": {
+      "memberEngagement": {
+        "type": "dashboard",
+        "charts": [
+          {
+            "type": "bar",
+            "title": "Member Directory Views by Month",
+            "data": "member_views_monthly"
+          },
+          {
+            "type": "pie", 
+            "title": "Member Categories Distribution",
+            "data": "member_categories"
+          },
+          {
+            "type": "line",
+            "title": "Member Registration Trends",
+            "data": "member_registrations"
+          }
+        ]
+      },
+      "eventPerformance": {
+        "type": "dashboard",
+        "charts": [
+          {
+            "type": "scatter",
+            "title": "Event Attendance vs. Marketing Spend",
+            "data": "event_attendance"
+          },
+          {
+            "type": "heatmap",
+            "title": "Event Popularity by Day/Time",
+            "data": "event_schedule"
+          }
+        ]
+      },
+      "contentAnalytics": {
+        "type": "dashboard", 
+        "charts": [
+          {
+            "type": "treemap",
+            "title": "Content Performance by Category",
+            "data": "content_performance"
+          },
+          {
+            "type": "line",
+            "title": "SEO Score Trends",
+            "data": "seo_scores"
+          }
+        ]
+      }
+    },
+    "reports": {
+      "schedule": "weekly",
+      "format": "html",
+      "output": ".cursor/reports/",
+      "templates": [
+        {
+          "name": "member-report",
+          "path": ".cursor/templates/member-report.html"
+        },
+        {
+          "name": "performance-report", 
+          "path": ".cursor/templates/performance-report.html"
+        }
+      ]
+    }
+  }
+}

@@ -104,5 +104,30 @@ function bcn_register_taxonomies() {
             'show_in_rest'      => true,
         )
     );
+
+    // Register Membership Level Taxonomy
+    register_taxonomy(
+        'bcn_membership_level',
+        'bcn_member',
+        array(
+            'labels'            => array(
+                'name'          => _x('Membership Levels', 'taxonomy general name', 'bcn-wp-theme'),
+                'singular_name' => _x('Membership Level', 'taxonomy singular name', 'bcn-wp-theme'),
+                'search_items'  => __('Search Membership Levels', 'bcn-wp-theme'),
+                'all_items'     => __('All Membership Levels', 'bcn-wp-theme'),
+                'edit_item'     => __('Edit Membership Level', 'bcn-wp-theme'),
+                'update_item'   => __('Update Membership Level', 'bcn-wp-theme'),
+                'add_new_item'  => __('Add New Membership Level', 'bcn-wp-theme'),
+                'new_item_name' => __('New Membership Level Name', 'bcn-wp-theme'),
+                'menu_name'     => __('Membership Levels', 'bcn-wp-theme'),
+            ),
+            'hierarchical'      => false,
+            'show_ui'           => true,
+            'show_admin_column' => true,
+            'query_var'         => true,
+            'rewrite'           => array('slug' => 'membership'),
+            'show_in_rest'      => true,
+        )
+    );
 }
 add_action('init', 'bcn_register_taxonomies');

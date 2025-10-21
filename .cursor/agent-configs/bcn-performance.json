@@ -1,0 +1,112 @@
+{
+  "agent": {
+    "id": "bcn-performance",
+    "name": "BCN Performance Agent",
+    "version": "1.0.0",
+    "description": "Performance monitoring and optimization for BCN website"
+  },
+  "triggers": [
+    {
+      "type": "schedule",
+      "cron": "0 9 * * *",
+      "timezone": "America/New_York"
+    },
+    {
+      "type": "webhook",
+      "path": "/webhook/performance-check"
+    },
+    {
+      "type": "file-change",
+      "patterns": ["assets/**/*.css", "assets/**/*.js", "**/*.php"],
+      "debounce": 5000
+    }
+  ],
+  "actions": [
+    {
+      "id": "lighthouse-staging",
+      "type": "run-command",
+      "command": "lighthouse https://staging6.buffalocannabisnetwork.com --output=json --output-path=.cursor/agents/reports/lighthouse-staging-{timestamp}.json --chrome-flags='--headless --no-sandbox'",
+      "timeout": 120000,
+      "retry": {
+        "attempts": 2,
+        "delay": 10000
+      }
+    },
+    {
+      "id": "lighthouse-production",
+      "type": "run-command",
+      "command": "lighthouse https://buffalocannabisnetwork.com --output=json --output-path=.cursor/agents/reports/lighthouse-production-{timestamp}.json --chrome-flags='--headless --no-sandbox'",
+      "timeout": 120000,
+      "retry": {
+        "attempts": 2,
+        "delay": 10000
+      }
+    },
+    {
+      "id": "analyze-performance",
+      "type": "analyze-lighthouse",
+      "input": ".cursor/agents/reports/lighthouse-{environment}-{timestamp}.json",
+      "thresholds": {
+        "performance": 90,
+        "accessibility": 90,
+        "seo": 90,
+        "best-practices": 90
+      },
+      "output": {
+        "file": ".cursor/agents/reports/performance-analysis-{timestamp}.json",
+        "format": "json"
+      }
+    },
+    {
+      "id": "page-speed-check",
+      "type": "run-command",
+      "command": "curl -w '@.cursor/agents/scripts/curl-format.txt' -o /dev/null -s https://staging6.buffalocannabisnetwork.com",
+      "timeout": 30000,
+      "output": {
+        "file": ".cursor/agents/logs/page-speed-{timestamp}.log",
+        "format": "text"
+      }
+    },
+    {
+      "id": "core-web-vitals",
+      "type": "run-command",
+      "command": "node .cursor/agents/scripts/core-web-vitals.js https://staging6.buffalocannabisnetwork.com",
+      "timeout": 60000,
+      "output": {
+        "file": ".cursor/agents/reports/core-web-vitals-{timestamp}.json",
+        "format": "json"
+      }
+    },
+    {
+      "id": "generate-performance-report",
+      "type": "generate-report",
+      "template": ".cursor/agents/templates/performance-report.md",
+      "data": {
+        "lighthouse-staging": ".cursor/agents/reports/lighthouse-staging-{timestamp}.json",
+        "lighthouse-production": ".cursor/agents/reports/lighthouse-production-{timestamp}.json",
+        "page-speed": ".cursor/agents/logs/page-speed-{timestamp}.log",
+        "core-web-vitals": ".cursor/agents/reports/core-web-vitals-{timestamp}.json"
+      },
+      "output": {
+        "file": ".cursor/agents/reports/performance-report-{date}.md",
+        "format": "markdown"
+      }
+    }
+  ],
+  "notifications": {
+    "on-threshold-breach": {
+      "type": "console",
+      "message": "⚠️ Performance threshold breached: {metric} = {value}% (threshold: {threshold}%)",
+      "channels": ["console", "file"]
+    },
+    "on-success": {
+      "type": "console",
+      "message": "✅ Performance check completed successfully"
+    },
+    "on-failure": {
+      "type": "console",
+      "message": "❌ Performance check failed: {error}",
+      "channels": ["console", "file", "webhook"]
+    }
+  }
+}

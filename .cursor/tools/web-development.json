@@ -1,0 +1,351 @@
+{
+  "webDevelopment": {
+    "enabled": true,
+    "tools": {
+      "html": {
+        "enabled": true,
+        "validation": {
+          "enabled": true,
+          "standard": "html5",
+          "rules": {
+            "alt-required": true,
+            "lang-required": true,
+            "title-required": false,
+            "doctype-required": true
+          }
+        },
+        "formatting": {
+          "enabled": true,
+          "indentSize": 2,
+          "maxLineLength": 120,
+          "selfClosingTags": true
+        },
+        "templates": {
+          "wordpress": {
+            "enabled": true,
+            "doctype": "<!DOCTYPE html>",
+            "lang": "en",
+            "charset": "utf-8",
+            "viewport": "width=device-width, initial-scale=1.0"
+          }
+        }
+      },
+      "css": {
+        "enabled": true,
+        "preprocessor": "scss",
+        "validation": {
+          "enabled": true,
+          "warnings": true,
+          "vendorPrefixes": true
+        },
+        "formatting": {
+          "enabled": true,
+          "indentSize": 2,
+          "maxLineLength": 120,
+          "sortProperties": true
+        },
+        "frameworks": {
+          "bootstrap": {
+            "enabled": false,
+            "version": "5.3.0"
+          },
+          "tailwind": {
+            "enabled": false,
+            "version": "3.3.0"
+          },
+          "custom": {
+            "enabled": true,
+            "name": "BCN Custom Framework",
+            "variables": {
+              "primary": "#4A90E2",
+              "secondary": "#D31C95", 
+              "success": "#28a745",
+              "warning": "#ffc107",
+              "danger": "#dc3545",
+              "info": "#17a2b8",
+              "light": "#f8f9fa",
+              "dark": "#1A1A1A"
+            }
+          }
+        },
+        "optimization": {
+          "minification": true,
+          "autoprefixer": true,
+          "purgeUnused": true,
+          "criticalCSS": true
+        }
+      },
+      "javascript": {
+        "enabled": true,
+        "version": "ES2022",
+        "validation": {
+          "enabled": true,
+          "eslint": {
+            "enabled": true,
+            "config": ".eslintrc.json",
+            "rules": {
+              "no-console": "warn",
+              "no-unused-vars": "error",
+              "prefer-const": "error"
+            }
+          }
+        },
+        "formatting": {
+          "enabled": true,
+          "prettier": {
+            "enabled": true,
+            "config": ".prettierrc.json"
+          }
+        },
+        "bundling": {
+          "enabled": true,
+          "tool": "webpack",
+          "config": "webpack.config.js",
+          "entry": {
+            "main": "./assets/js/main.js",
+            "member-cards": "./assets/js/member-cards-enhanced.js",
+            "admin": "./assets/js/admin.js"
+          }
+        },
+        "testing": {
+          "enabled": true,
+          "framework": "jest",
+          "config": "jest.config.js"
+        }
+      },
+      "php": {
+        "enabled": true,
+        "version": "8.1+",
+        "validation": {
+          "enabled": true,
+          "phpcs": {
+            "enabled": true,
+            "standard": "WordPress",
+            "config": "phpcs.xml.dist"
+          },
+          "phpstan": {
+            "enabled": true,
+            "level": 6,
+            "config": "phpstan.neon"
+          }
+        },
+        "formatting": {
+          "enabled": true,
+          "phpcbf": {
+            "enabled": true,
+            "standard": "WordPress"
+          }
+        },
+        "wordpress": {
+          "enabled": true,
+          "version": "6.4+",
+          "codingStandards": "WordPress",
+          "hooks": {
+            "enabled": true,
+            "prefix": "bcn_"
+          },
+          "security": {
+            "enabled": true,
+            "sanitization": true,
+            "escaping": true,
+            "nonces": true
+          }
+        }
+      },
+      "wordpress": {
+        "enabled": true,
+        "version": "6.4+",
+        "theme": {
+          "name": "BCN WP Theme",
+          "version": "1.0.0",
+          "textDomain": "bcn-wp-theme",
+          "supports": [
+            "post-thumbnails",
+            "custom-logo",
+            "html5",
+            "customize-selective-refresh-widgets",
+            "responsive-embeds"
+          ]
+        },
+        "customPostTypes": [
+          {
+            "name": "bcn_member",
+            "label": "Members",
+            "public": true,
+            "hasArchive": true,
+            "supports": ["title", "editor", "thumbnail", "custom-fields"]
+          },
+          {
+            "name": "events",
+            "label": "Events", 
+            "public": true,
+            "hasArchive": true,
+            "supports": ["title", "editor", "thumbnail", "custom-fields"]
+          },
+          {
+            "name": "news",
+            "label": "News",
+            "public": true,
+            "hasArchive": true,
+            "supports": ["title", "editor", "thumbnail", "custom-fields"]
+          }
+        ],
+        "customTaxonomies": [
+          {
+            "name": "bcn_membership_level",
+            "label": "Membership Levels",
+            "objectType": ["bcn_member"],
+            "public": true,
+            "hierarchical": true
+          },
+          {
+            "name": "event_category",
+            "label": "Event Categories",
+            "objectType": ["events"],
+            "public": true,
+            "hierarchical": true
+          }
+        ],
+        "acf": {
+          "enabled": true,
+          "version": "6.0+",
+          "jsonPath": "acf-json/",
+          "groups": [
+            "member_profile",
+            "event_details", 
+            "news_article",
+            "page_settings"
+          ]
+        }
+      },
+      "build": {
+        "enabled": true,
+        "tool": "webpack",
+        "config": "webpack.config.js",
+        "scripts": {
+          "dev": "webpack --mode development --watch",
+          "build": "webpack --mode production",
+          "test": "jest",
+          "lint": "eslint assets/js/ && phpcs .",
+          "format": "prettier --write . && phpcbf ."
+        }
+      },
+      "testing": {
+        "enabled": true,
+        "tools": {
+          "jest": {
+            "enabled": true,
+            "config": "jest.config.js"
+          },
+          "phpunit": {
+            "enabled": true,
+            "config": "phpunit.xml"
+          },
+          "cypress": {
+            "enabled": false,
+            "config": "cypress.config.js"
+          }
+        }
+      },
+      "performance": {
+        "enabled": true,
+        "lighthouse": {
+          "enabled": true,
+          "thresholds": {
+            "performance": 90,
+            "accessibility": 90,
+            "seo": 90,
+            "best-practices": 90
+          }
+        },
+        "webpackBundleAnalyzer": {
+          "enabled": true,
+          "config": "webpack-bundle-analyzer.config.js"
+        }
+      },
+      "accessibility": {
+        "enabled": true,
+        "axe": {
+          "enabled": true,
+          "config": "axe.config.js"
+        },
+        "waiAria": {
+          "enabled": true,
+          "validation": true
+        }
+      },
+      "seo": {
+        "enabled": true,
+        "yoast": {
+          "enabled": false
+        },
+        "rankmath": {
+          "enabled": false
+        },
+        "custom": {
+          "enabled": true,
+          "schema": {
+            "enabled": true,
+            "types": ["Organization", "Event", "NewsArticle", "Person"]
+          },
+          "meta": {
+            "enabled": true,
+            "og": true,
+            "twitter": true
+          }
+        }
+      }
+    },
+    "workflows": {
+      "development": {
+        "watch": true,
+        "hotReload": true,
+        "autoFormat": true,
+        "autoLint": true
+      },
+      "build": {
+        "minification": true,
+        "optimization": true,
+        "sourceMaps": true,
+        "versioning": true
+      },
+      "deployment": {
+        "staging": {
+          "url": "https://staging6.buffalocannabisnetwork.com",
+          "ssh": "u2037-2lvglkrliykq@staging6.buffalocannabisnetwork.com:18765"
+        },
+        "production": {
+          "url": "https://buffalocannabisnetwork.com",
+          "ssh": "u2037-2lvglkrliykq@buffalocannabisnetwork.com:18765"
+        }
+      }
+    },
+    "integrations": {
+      "git": {
+        "enabled": true,
+        "hooks": {
+          "pre-commit": "lint-staged",
+          "pre-push": "npm run test"
+        }
+      },
+      "github": {
+        "enabled": true,
+        "actions": {
+          "enabled": true,
+          "workflows": [".github/workflows/"]
+        }
+      },
+      "vscode": {
+        "enabled": true,
+        "extensions": [
+          "ms-vscode.vscode-typescript-next",
+          "bradlc.vscode-tailwindcss",
+          "esbenp.prettier-vscode",
+          "ms-vscode.vscode-eslint",
+          "junstyle.php-cs-fixer",
+          "wordpress.health-check"
+        ]
+      }
+    }
+  }
+}

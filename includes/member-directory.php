@@ -9,47 +9,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-/**
- * Register the Member custom post type.
- */
-function bcn_register_member_post_type() {
-    $labels = array(
-        'name'                  => _x('Members', 'Post type general name', 'bcn-wp-theme'),
-        'singular_name'         => _x('Member', 'Post type singular name', 'bcn-wp-theme'),
-        'menu_name'             => _x('Members', 'Admin Menu text', 'bcn-wp-theme'),
-        'name_admin_bar'        => _x('Member', 'Add New on Toolbar', 'bcn-wp-theme'),
-        'add_new'               => __('Add New', 'bcn-wp-theme'),
-        'add_new_item'          => __('Add New Member', 'bcn-wp-theme'),
-        'new_item'              => __('New Member', 'bcn-wp-theme'),
-        'edit_item'             => __('Edit Member', 'bcn-wp-theme'),
-        'view_item'             => __('View Member', 'bcn-wp-theme'),
-        'all_items'             => __('All Members', 'bcn-wp-theme'),
-        'search_items'          => __('Search Members', 'bcn-wp-theme'),
-        'parent_item_colon'     => __('Parent Members:', 'bcn-wp-theme'),
-        'not_found'             => __('No members found.', 'bcn-wp-theme'),
-        'not_found_in_trash'    => __('No members found in Trash.', 'bcn-wp-theme'),
-        'featured_image'        => _x('Member Logo', 'Overrides the "Featured Image" phrase', 'bcn-wp-theme'),
-        'set_featured_image'    => _x('Set member logo', 'Overrides the "Set featured image" phrase', 'bcn-wp-theme'),
-        'remove_featured_image' => _x('Remove member logo', 'Overrides the "Remove featured image" phrase', 'bcn-wp-theme'),
-        'use_featured_image'    => _x('Use as member logo', 'Overrides the "Use as featured image" phrase', 'bcn-wp-theme'),
-    );
-
-    $args = array(
-        'labels'             => $labels,
-        'public'             => true,
-        'show_in_rest'       => true,
-        'menu_icon'          => 'dashicons-id',
-        'supports'           => array('title', 'editor', 'thumbnail', 'excerpt', 'revisions'),
-        'has_archive'        => true,
-        'rewrite'            => array('slug' => 'members'),
-        'taxonomies'         => array('bcn_membership_level'),
-        'show_in_nav_menus'  => true,
-        'show_in_admin_bar'  => true,
-    );
-
-    register_post_type('bcn_member', $args);
-}
-add_action('init', 'bcn_register_member_post_type');
+// Member post type is registered in includes/post-types.php
 
 /**
  * Register the Membership Level taxonomy.
@@ -147,6 +107,48 @@ function bcn_register_member_meta() {
         'bcn_member_submission_key' => array(
             'type'         => 'string',
             'description'  => __('Private key used to access the member submission form', 'bcn-wp-theme'),
+            'single'       => true,
+            'show_in_rest' => false,
+        ),
+        'bcn_member_instagram' => array(
+            'type'         => 'string',
+            'description'  => __('Instagram profile URL', 'bcn-wp-theme'),
+            'single'       => true,
+            'show_in_rest' => true,
+        ),
+        'bcn_member_facebook' => array(
+            'type'         => 'string',
+            'description'  => __('Facebook page URL', 'bcn-wp-theme'),
+            'single'       => true,
+            'show_in_rest' => true,
+        ),
+        'bcn_member_twitter' => array(
+            'type'         => 'string',
+            'description'  => __('Twitter profile URL', 'bcn-wp-theme'),
+            'single'       => true,
+            'show_in_rest' => true,
+        ),
+        'bcn_member_linkedin' => array(
+            'type'         => 'string',
+            'description'  => __('LinkedIn company page URL', 'bcn-wp-theme'),
+            'single'       => true,
+            'show_in_rest' => true,
+        ),
+        'bcn_member_youtube' => array(
+            'type'         => 'string',
+            'description'  => __('YouTube channel URL', 'bcn-wp-theme'),
+            'single'       => true,
+            'show_in_rest' => true,
+        ),
+        'bcn_member_testimonials' => array(
+            'type'         => 'array',
+            'description'  => __('Member testimonials and reviews', 'bcn-wp-theme'),
+            'single'       => true,
+            'show_in_rest' => true,
+        ),
+        'bcn_member_last_activity' => array(
+            'type'         => 'string',
+            'description'  => __('Last activity timestamp', 'bcn-wp-theme'),
             'single'       => true,
             'show_in_rest' => false,
         ),
@@ -263,6 +265,28 @@ function bcn_member_details_meta_box($post) {
     <p>
         <label for="bcn_member_address"><strong><?php esc_html_e('Address', 'bcn-wp-theme'); ?></strong></label><br />
         <textarea class="widefat" rows="3" name="bcn_member_address" id="bcn_member_address"><?php echo esc_textarea($address); ?></textarea>
+    </p>
+    
+    <h4><?php esc_html_e('Social Media Links', 'bcn-wp-theme'); ?></h4>
+    <p>
+        <label for="bcn_member_instagram"><strong><?php esc_html_e('Instagram', 'bcn-wp-theme'); ?></strong></label><br />
+        <input type="url" class="widefat" name="bcn_member_instagram" id="bcn_member_instagram" value="<?php echo esc_attr(get_post_meta($post->ID, 'bcn_member_instagram', true)); ?>" placeholder="https://instagram.com/username" />
+    </p>
+    <p>
+        <label for="bcn_member_facebook"><strong><?php esc_html_e('Facebook', 'bcn-wp-theme'); ?></strong></label><br />
+        <input type="url" class="widefat" name="bcn_member_facebook" id="bcn_member_facebook" value="<?php echo esc_attr(get_post_meta($post->ID, 'bcn_member_facebook', true)); ?>" placeholder="https://facebook.com/pagename" />
+    </p>
+    <p>
+        <label for="bcn_member_twitter"><strong><?php esc_html_e('Twitter', 'bcn-wp-theme'); ?></strong></label><br />
+        <input type="url" class="widefat" name="bcn_member_twitter" id="bcn_member_twitter" value="<?php echo esc_attr(get_post_meta($post->ID, 'bcn_member_twitter', true)); ?>" placeholder="https://twitter.com/username" />
+    </p>
+    <p>
+        <label for="bcn_member_linkedin"><strong><?php esc_html_e('LinkedIn', 'bcn-wp-theme'); ?></strong></label><br />
+        <input type="url" class="widefat" name="bcn_member_linkedin" id="bcn_member_linkedin" value="<?php echo esc_attr(get_post_meta($post->ID, 'bcn_member_linkedin', true)); ?>" placeholder="https://linkedin.com/company/companyname" />
+    </p>
+    <p>
+        <label for="bcn_member_youtube"><strong><?php esc_html_e('YouTube', 'bcn-wp-theme'); ?></strong></label><br />
+        <input type="url" class="widefat" name="bcn_member_youtube" id="bcn_member_youtube" value="<?php echo esc_attr(get_post_meta($post->ID, 'bcn_member_youtube', true)); ?>" placeholder="https://youtube.com/channel/channelid" />
     </p>
     <?php
 }
@@ -653,9 +677,12 @@ function bcn_handle_member_onboarding_form() {
         if (is_wp_error($validation)) {
             add_settings_error('bcn_member_onboarding', 'bcn-member-logo', $validation->get_error_message(), 'error');
         } else {
-            require_once ABSPATH . 'wp-admin/includes/file.php';
-            require_once ABSPATH . 'wp-admin/includes/media.php';
-            require_once ABSPATH . 'wp-admin/includes/image.php';
+            // Load WordPress admin functions
+            if (!function_exists('media_handle_upload')) {
+                require_once ABSPATH . 'wp-admin/includes/file.php';
+                require_once ABSPATH . 'wp-admin/includes/media.php';
+                require_once ABSPATH . 'wp-admin/includes/image.php';
+            }
 
             $attachment_id = media_handle_upload('bcn_member_logo', $post_id);
             if (!is_wp_error($attachment_id)) {
@@ -985,9 +1012,12 @@ function bcn_member_submission_form_shortcode($atts) {
                             $errors[] = $validation->get_error_message();
                             wp_delete_post($post_id, true);
                         } else {
-                            require_once ABSPATH . 'wp-admin/includes/file.php';
-                            require_once ABSPATH . 'wp-admin/includes/media.php';
-                            require_once ABSPATH . 'wp-admin/includes/image.php';
+                            // Load WordPress admin functions
+                            if (!function_exists('media_handle_upload')) {
+                                require_once ABSPATH . 'wp-admin/includes/file.php';
+                                require_once ABSPATH . 'wp-admin/includes/media.php';
+                                require_once ABSPATH . 'wp-admin/includes/image.php';
+                            }
 
                             $attachment_id = media_handle_upload('bcn_member_submission_file', $post_id);
 

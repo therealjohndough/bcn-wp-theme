@@ -1,0 +1,142 @@
+{
+  "agent": {
+    "id": "bcn-deployment",
+    "name": "BCN Deployment Agent",
+    "version": "1.0.0",
+    "description": "Automated deployment and health monitoring for BCN environments"
+  },
+  "triggers": [
+    {
+      "type": "webhook",
+      "path": "/webhook/deploy",
+      "method": "POST",
+      "authentication": {
+        "type": "bearer",
+        "token": "DEPLOY_WEBHOOK_TOKEN"
+      }
+    },
+    {
+      "type": "git-push",
+      "branches": ["main"],
+      "environments": ["staging"]
+    },
+    {
+      "type": "git-tag",
+      "pattern": "v*",
+      "environments": ["production"]
+    }
+  ],
+  "environments": {
+    "staging": {
+      "url": "https://staging6.buffalocannabisnetwork.com",
+      "ssh": {
+        "host": "staging6.buffalocannabisnetwork.com",
+        "user": "u2037-2lvglkrliykq",
+        "port": 18765,
+        "key": "~/.ssh/siteground_id"
+      },
+      "path": "/home/u2037-2lvglkrliykq/staging6.buffalocannabisnetwork.com/public_html/wp-content/themes/bcn-wp-theme"
+    },
+    "production": {
+      "url": "https://buffalocannabisnetwork.com",
+      "ssh": {
+        "host": "buffalocannabisnetwork.com",
+        "user": "u2037-2lvglkrliykq", 
+        "port": 18765,
+        "key": "~/.ssh/siteground_id"
+      },
+      "path": "/home/u2037-2lvglkrliykq/buffalocannabisnetwork.com/public_html/wp-content/themes/bcn-wp-theme"
+    }
+  },
+  "actions": [
+    {
+      "id": "pre-deploy-tests",
+      "type": "run-command",
+      "command": "./scripts/test-theme.sh",
+      "timeout": 300000,
+      "condition": "always"
+    },
+    {
+      "id": "build-theme",
+      "type": "run-command",
+      "command": "mkdir -p build && cp -r . build/ && find build -name '*.css' -exec cleancss {} -o {} \\;",
+      "timeout": 60000,
+      "condition": "previous-success"
+    },
+    {
+      "id": "create-backup",
+      "type": "run-command",
+      "command": "ssh -p {env.ssh.port} -i {env.ssh.key} {env.ssh.user}@{env.ssh.host} 'cd {env.path} && tar -czf ../backup-{env.name}-{timestamp}.tar.gz .'",
+      "timeout": 120000,
+      "condition": "previous-success"
+    },
+    {
+      "id": "deploy-files",
+      "type": "run-command",
+      "command": "rsync -avz --delete -e 'ssh -p {env.ssh.port} -i {env.ssh.key}' build/ {env.ssh.user}@{env.ssh.host}:{env.path}/",
+      "timeout": 300000,
+      "condition": "previous-success"
+    },
+    {
+      "id": "set-permissions",
+      "type": "run-command",
+      "command": "ssh -p {env.ssh.port} -i {env.ssh.key} {env.ssh.user}@{env.ssh.host} 'find {env.path} -type d -exec chmod 755 {} \\; && find {env.path} -type f -exec chmod 644 {} \\;'",
+      "timeout": 60000,
+      "condition": "previous-success"
+    },
+    {
+      "id": "health-check",
+      "type": "run-command",
+      "command": "curl -f {env.url}",
+      "timeout": 30000,
+      "retry": {
+        "attempts": 3,
+        "delay": 10000
+      },
+      "condition": "previous-success"
+    },
+    {
+      "id": "verify-deployment",
+      "type": "run-command",
+      "command": "curl -s {env.url}/wp-content/themes/bcn-wp-theme/style.css | head -1",
+      "timeout": 15000,
+      "condition": "previous-success"
+    },
+    {
+      "id": "performance-check",
+      "type": "run-command",
+      "command": "lighthouse {env.url} --output=json --output-path=.cursor/agents/reports/deployment-{env.name}-{timestamp}.json --chrome-flags='--headless'",
+      "timeout": 120000,
+      "condition": "previous-success"
+    },
+    {
+      "id": "rollback-on-failure",
+      "type": "run-command",
+      "command": "ssh -p {env.ssh.port} -i {env.ssh.key} {env.ssh.user}@{env.ssh.host} 'cd {env.path} && tar -xzf ../backup-{env.name}-{timestamp}.tar.gz'",
+      "timeout": 180000,
+      "condition": "health-check-failed"
+    }
+  ],
+  "notifications": {
+    "on-deploy-start": {
+      "type": "console",
+      "message": "🚀 Starting deployment to {env.name}",
+      "channels": ["console", "file"]
+    },
+    "on-deploy-success": {
+      "type": "console",
+      "message": "✅ Successfully deployed to {env.name}",
+      "channels": ["console", "file", "webhook"]
+    },
+    "on-deploy-failure": {
+      "type": "console",
+      "message": "❌ Deployment to {env.name} failed: {error}",
+      "channels": ["console", "file", "webhook"]
+    },
+    "on-rollback": {
+      "type": "console",
+      "message": "🔄 Rolled back {env.name} to previous version",
+      "channels": ["console", "file", "webhook"]
+    }
+  }
+}

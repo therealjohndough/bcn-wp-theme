@@ -1,0 +1,99 @@
+{
+  "agent": {
+    "id": "bcn-code-quality",
+    "name": "BCN Code Quality Agent",
+    "version": "1.0.0",
+    "description": "Automated code quality monitoring for BCN WordPress theme"
+  },
+  "triggers": [
+    {
+      "type": "file-change",
+      "patterns": [
+        "**/*.php",
+        "**/*.js", 
+        "**/*.css",
+        "**/*.scss",
+        "template-parts/**/*",
+        "includes/**/*",
+        "assets/**/*"
+      ],
+      "debounce": 2000
+    },
+    {
+      "type": "git-commit",
+      "branches": ["main", "develop", "feature/*"]
+    }
+  ],
+  "actions": [
+    {
+      "id": "php-syntax-check",
+      "type": "run-command",
+      "command": "php -l {file}",
+      "condition": "file-extension:php",
+      "timeout": 10000
+    },
+    {
+      "id": "phpcs-check",
+      "type": "run-command", 
+      "command": "phpcs --standard=WordPress {file} --report=json",
+      "condition": "file-extension:php",
+      "timeout": 30000,
+      "output": {
+        "file": ".cursor/agents/logs/phpcs-{timestamp}.json",
+        "format": "json"
+      }
+    },
+    {
+      "id": "eslint-check",
+      "type": "run-command",
+      "command": "eslint {file} --format=json",
+      "condition": "file-extension:js",
+      "timeout": 15000,
+      "output": {
+        "file": ".cursor/agents/logs/eslint-{timestamp}.json",
+        "format": "json"
+      }
+    },
+    {
+      "id": "prettier-check",
+      "type": "run-command",
+      "command": "prettier --check {file} --write",
+      "condition": "file-extension:css,scss,js",
+      "timeout": 10000
+    },
+    {
+      "id": "wordpress-standards",
+      "type": "run-command",
+      "command": "phpcs --standard=WordPress . --report=json --ignore=node_modules,vendor,wp-content",
+      "schedule": "0 */6 * * *",
+      "timeout": 60000,
+      "output": {
+        "file": ".cursor/agents/reports/wordpress-standards-{date}.json",
+        "format": "json"
+      }
+    }
+  ],
+  "conditions": {
+    "file-extension": {
+      "php": "*.php",
+      "js": "*.js",
+      "css": "*.css,*.scss"
+    }
+  },
+  "notifications": {
+    "on-success": {
+      "type": "console",
+      "message": "✅ Code quality checks passed for {file}"
+    },
+    "on-failure": {
+      "type": "console", 
+      "message": "❌ Code quality issues found in {file}",
+      "details": "Check logs for details"
+    },
+    "on-error": {
+      "type": "console",
+      "message": "🚨 Code quality check failed for {file}",
+      "details": "Check agent logs"
+    }
+  }
+}
