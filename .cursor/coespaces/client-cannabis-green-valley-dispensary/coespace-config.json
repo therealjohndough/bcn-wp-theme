@@ -1,0 +1,51 @@
+{
+  "coespace": {
+    "name": "Green Valley Dispensary",
+    "type": "client-project",
+    "industry": "cannabis",
+    "client": "Green Valley Dispensary",
+    "description": "E-commerce website for cannabis dispensary",
+    "status": "planning",
+    "priority": "medium"
+  },
+  "team": {
+    "owner": "agency-admin",
+    "collaborators": [],
+    "access_level": "full"
+  },
+  "technology": {
+    "platform": "wordpress",
+    "php_version": "8.1",
+    "wordpress_version": "6.4+",
+    "theme_framework": "custom",
+    "plugins": [],
+    "build_tools": ["webpack", "sass", "babel"]
+  },
+  "development": {
+    "local_url": "http://localhost:8080",
+    "staging_url": "",
+    "production_url": "",
+    "database": "mysql",
+    "cache": "redis"
+  },
+  "deployment": {
+    "provider": "siteground",
+    "method": "rsync",
+    "branch": "main",
+    "auto_deploy": false,
+    "backup_strategy": "daily"
+  },
+  "budget": {
+    "estimated_hours": 0,
+    "hourly_rate": 150,
+    "total_budget": 0,
+    "spent_hours": 0,
+    "remaining_budget": 0
+  },
+  "timeline": {
+    "start_date": "2025-10-21",
+    "launch_date": "",
+    "maintenance_start": "",
+    "maintenance_end": ""
+  }
+}

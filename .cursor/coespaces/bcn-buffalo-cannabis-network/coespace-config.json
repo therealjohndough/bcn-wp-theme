@@ -1,0 +1,77 @@
+{
+  "coespace": {
+    "name": "BCN Buffalo Cannabis Network",
+    "type": "client-project",
+    "industry": "cannabis",
+    "client": "Buffalo Cannabis Network",
+    "description": "WordPress theme development for cannabis industry community platform",
+    "status": "active",
+    "priority": "high"
+  },
+  "team": {
+    "owner": "agency-admin",
+    "collaborators": [
+      "developer-1",
+      "designer-1"
+    ],
+    "access_level": "full"
+  },
+  "technology": {
+    "platform": "wordpress",
+    "php_version": "8.1",
+    "wordpress_version": "6.4+",
+    "theme_framework": "custom",
+    "plugins": [
+      "advanced-custom-fields-pro",
+      "woocommerce",
+      "yoast-seo"
+    ],
+    "build_tools": [
+      "webpack",
+      "sass",
+      "babel"
+    ]
+  },
+  "development": {
+    "local_url": "http://localhost:8080",
+    "staging_url": "https://staging6.buffalocannabisnetwork.com",
+    "production_url": "https://buffalocannabisnetwork.com",
+    "database": "mysql",
+    "cache": "redis"
+  },
+  "deployment": {
+    "provider": "siteground",
+    "method": "rsync",
+    "branch": "main",
+    "auto_deploy": true,
+    "backup_strategy": "daily"
+  },
+  "features": {
+    "custom_post_types": [
+      "bcn_member",
+      "bcn_event"
+    ],
+    "custom_taxonomies": [
+      "event_category",
+      "bcn_membership_level"
+    ],
+    "acf_fields": true,
+    "member_directory": true,
+    "event_management": true,
+    "responsive_design": true,
+    "seo_optimized": true
+  },
+  "budget": {
+    "estimated_hours": 120,
+    "hourly_rate": 150,
+    "total_budget": 18000,
+    "spent_hours": 85,
+    "remaining_budget": 5250
+  },
+  "timeline": {
+    "start_date": "2024-01-15",
+    "launch_date": "2024-03-01",
+    "maintenance_start": "2024-03-01",
+    "maintenance_end": "2025-03-01"
+  }
+}

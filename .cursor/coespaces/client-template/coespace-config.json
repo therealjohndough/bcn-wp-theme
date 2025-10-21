@@ -1,0 +1,59 @@
+{
+  "coespace": {
+    "name": "Client Project Template",
+    "type": "client-project",
+    "industry": "{{INDUSTRY}}",
+    "client": "{{CLIENT_NAME}}",
+    "description": "{{PROJECT_DESCRIPTION}}",
+    "status": "planning",
+    "priority": "{{PRIORITY}}"
+  },
+  "team": {
+    "owner": "agency-admin",
+    "collaborators": [
+      "{{ASSIGNED_DEVELOPER}}"
+    ],
+    "access_level": "full"
+  },
+  "technology": {
+    "platform": "{{PLATFORM}}",
+    "php_version": "8.1",
+    "wordpress_version": "6.4+",
+    "theme_framework": "{{FRAMEWORK}}",
+    "plugins": [
+      "{{REQUIRED_PLUGINS}}"
+    ],
+    "build_tools": [
+      "webpack",
+      "sass",
+      "babel"
+    ]
+  },
+  "development": {
+    "local_url": "http://localhost:{{PORT}}",
+    "staging_url": "{{STAGING_URL}}",
+    "production_url": "{{PRODUCTION_URL}}",
+    "database": "mysql",
+    "cache": "redis"
+  },
+  "deployment": {
+    "provider": "{{HOSTING_PROVIDER}}",
+    "method": "{{DEPLOYMENT_METHOD}}",
+    "branch": "main",
+    "auto_deploy": false,
+    "backup_strategy": "daily"
+  },
+  "budget": {
+    "estimated_hours": "{{ESTIMATED_HOURS}}",
+    "hourly_rate": "{{HOURLY_RATE}}",
+    "total_budget": "{{TOTAL_BUDGET}}",
+    "spent_hours": 0,
+    "remaining_budget": "{{TOTAL_BUDGET}}"
+  },
+  "timeline": {
+    "start_date": "{{START_DATE}}",
+    "launch_date": "{{LAUNCH_DATE}}",
+    "maintenance_start": "{{MAINTENANCE_START}}",
+    "maintenance_end": "{{MAINTENANCE_END}}"
+  }
+}

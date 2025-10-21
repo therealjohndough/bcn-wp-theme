@@ -1,0 +1,67 @@
+{
+  "coespace": {
+    "name": "Agency Core Templates",
+    "type": "agency-operations",
+    "department": "development",
+    "purpose": "reusable-templates",
+    "description": "Reusable WordPress theme templates and components for client projects",
+    "status": "active",
+    "priority": "medium"
+  },
+  "team": {
+    "owner": "agency-admin",
+    "collaborators": [
+      "developer-1",
+      "developer-2",
+      "designer-1"
+    ],
+    "access_level": "full"
+  },
+  "technology": {
+    "platform": "wordpress",
+    "php_version": "8.1",
+    "wordpress_version": "6.4+",
+    "theme_framework": "custom",
+    "build_tools": [
+      "webpack",
+      "sass",
+      "babel",
+      "gulp"
+    ]
+  },
+  "templates": {
+    "wordpress_themes": [
+      "cannabis-industry-theme",
+      "restaurant-theme",
+      "ecommerce-theme",
+      "corporate-theme",
+      "portfolio-theme"
+    ],
+    "components": [
+      "member-directory",
+      "event-management",
+      "product-catalog",
+      "contact-forms",
+      "testimonial-slider",
+      "pricing-tables"
+    ],
+    "plugins": [
+      "custom-post-types",
+      "acf-field-groups",
+      "shortcodes",
+      "widgets"
+    ]
+  },
+  "version_control": {
+    "main_branch": "main",
+    "development_branch": "develop",
+    "feature_branches": true,
+    "release_tags": true
+  },
+  "documentation": {
+    "setup_guide": true,
+    "api_documentation": true,
+    "usage_examples": true,
+    "changelog": true
+  }
+}
