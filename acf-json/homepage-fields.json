@@ -1,0 +1,93 @@
+[
+  {
+    "key": "group_bcn_homepage",
+    "title": "Homepage Content",
+    "fields": [
+      {
+        "key": "field_hero_title",
+        "label": "Hero Title",
+        "name": "hero_title",
+        "type": "text",
+        "default_value": "Building Buffalo's Cannabis Future, Together",
+        "placeholder": "Main headline",
+        "instructions": "Large hero heading at top of homepage"
+      },
+      {
+        "key": "field_hero_tagline",
+        "label": "Hero Tagline",
+        "name": "hero_tagline",
+        "type": "text",
+        "default_value": "Connect. Support. Elevate.",
+        "placeholder": "Tagline",
+        "instructions": "Short tagline under main heading"
+      },
+      {
+        "key": "field_hero_description",
+        "label": "Hero Description",
+        "name": "hero_description",
+        "type": "textarea",
+        "default_value": "Western New York's premier network fostering a thriving, collaborative, and responsible cannabis industry",
+        "rows": 3
+      },
+      {
+        "key": "field_mission_heading",
+        "label": "Mission Heading",
+        "name": "mission_heading",
+        "type": "text",
+        "default_value": "The Premier Cannabis Network in Western New York"
+      },
+      {
+        "key": "field_mission_text",
+        "label": "Mission Text",
+        "name": "mission_text",
+        "type": "wysiwyg",
+        "default_value": "Buffalo Cannabis Network is more than networking—it's a community where authentic relationships drive industry success.",
+        "toolbar": "basic"
+      },
+      {
+        "key": "field_members_heading",
+        "label": "Members Section Heading",
+        "name": "members_heading",
+        "type": "text",
+        "default_value": "We Are Stronger, Together"
+      },
+      {
+        "key": "field_members_subheading",
+        "label": "Members Section Subheading",
+        "name": "members_subheading",
+        "type": "text",
+        "default_value": "Meet our valued members powering Buffalo's cannabis industry"
+      },
+      {
+        "key": "field_cta_heading",
+        "label": "CTA Heading",
+        "name": "cta_heading",
+        "type": "text",
+        "default_value": "Ready to Join?"
+      },
+      {
+        "key": "field_cta_text",
+        "label": "CTA Text",
+        "name": "cta_text",
+        "type": "textarea",
+        "default_value": "Become part of Western New York's premier cannabis community and start building meaningful connections today.",
+        "rows": 2
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page_type",
+          "operator": "==",
+          "value": "front_page"
+        }
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label"
+  }
+]
+

@@ -1,0 +1,280 @@
+/**
+ * Buffalo Cannabis Network - Lucide Icon System
+ * Using SVG icons with optimized stroke-width
+ */
+
+/* ============================================
+   LUCIDE ICON BASE STYLES
+   Using data-lucide attributes for SVG rendering
+   ============================================ */
+
+/* Icon container styling */
+[data-lucide],
+[class^="icon-"],
+[class*=" icon-"] {
+    display: inline-block;
+    width: 1.25em;
+    height: 1.25em;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+    stroke-width: 1.5; /* Optimized for cannabis brand - clean, modern lines */
+}
+
+/* SVG styling for Lucide icons */
+[data-lucide] svg,
+[class^="icon-"] svg,
+[class*=" icon-"] svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    stroke-width: inherit;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ============================================
+   ICON SIZES
+   ============================================ */
+
+.icon-xs { width: 0.875em; height: 0.875em; }
+.icon-sm { width: 1em; height: 1em; }
+.icon-md { width: 1.5em; height: 1.5em; }
+.icon-lg { width: 2em; height: 2em; }
+.icon-xl { width: 3em; height: 3em; }
+.icon-2xl { width: 4em; height: 4em; }
+
+/* ============================================
+   ICON COLORS
+   ============================================ */
+
+.icon-primary { color: var(--wp--preset--color--primary, #7CB342); }
+.icon-secondary { color: var(--wp--preset--color--secondary, #4A90E2); }
+.icon-accent { color: var(--wp--preset--color--accent, #9C27B0); }
+.icon-highlight { color: var(--wp--preset--color--highlight, #FFC107); }
+.icon-white { color: #ffffff; }
+.icon-black { color: #000000; }
+.icon-gray { color: var(--wp--preset--color--gray, #757575); }
+
+/* ============================================
+   ICON STROKE WEIGHTS
+   ============================================ */
+
+.icon-thin { stroke-width: 1; }        /* Delicate, elegant */
+.icon-regular { stroke-width: 1.5; }   /* Default - best for BCN */
+.icon-medium { stroke-width: 2; }      /* Standard Lucide */
+.icon-bold { stroke-width: 2.5; }      /* Strong emphasis */
+.icon-heavy { stroke-width: 3; }       /* Maximum impact */
+
+/* ============================================
+   ICON ANIMATIONS
+   ============================================ */
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+    50% { opacity: 0.7; transform: scale(1.1) rotate(5deg); }
+}
+
+.icon-loader-pinwheel { animation: spin 2s linear infinite; }
+.icon-sparkle { animation: sparkle 2s ease-in-out infinite; }
+.icon-pulse { animation: pulse 2s ease-in-out infinite; }
+.icon-bounce { animation: bounce 1s ease-in-out infinite; }
+
+/* ============================================
+   CONTEXTUAL ICON USES
+   ============================================ */
+
+/* Event Cards */
+.event-card .icon-calendar-fold,
+.event-meta .icon-calendar-fold {
+    color: var(--wp--preset--color--primary);
+}
+
+.event-card .icon-clock,
+.event-meta .icon-clock {
+    color: var(--wp--preset--color--secondary);
+}
+
+.event-card .icon-map-pin,
+.event-card .icon-bus,
+.event-meta .icon-map-pin {
+    color: var(--wp--preset--color--accent);
+}
+
+.event-card .icon-tickets {
+    color: var(--wp--preset--color--highlight);
+}
+
+/* Featured/Special Content */
+.featured .icon-sparkle,
+.special .icon-sparkle {
+    color: var(--wp--preset--color--highlight);
+}
+
+/* Speaker/Presentation */
+.speaker .icon-mic-vocal,
+.presentation .icon-mic-vocal {
+    color: var(--wp--preset--color--secondary);
+}
+
+/* Network/Community */
+.network .icon-radio-tower,
+.community .icon-users {
+    color: var(--wp--preset--color--accent);
+}
+
+/* Innovation/Ideas */
+.innovation .icon-lamp-ceiling,
+.ideas .icon-lamp-ceiling {
+    color: var(--wp--preset--color--highlight);
+}
+
+/* Tools/Resources */
+.tools .icon-pocket-knife,
+.resources .icon-pocket-knife {
+    color: var(--wp--preset--color--primary);
+}
+
+/* Events/Entertainment */
+.entertainment .icon-ferris-wheel {
+    color: var(--wp--preset--color--accent);
+}
+
+/* Growth/Structure */
+.growth .icon-pyramid,
+.hierarchy .icon-pyramid {
+    color: var(--wp--preset--color--primary);
+}
+
+/* Organic/Natural (cannabis theme) */
+.organic .icon-snail,
+.natural .icon-snail {
+    color: var(--wp--preset--color--primary);
+}
+
+/* ============================================
+   ICON HOVER EFFECTS
+   ============================================ */
+
+a:hover [data-lucide],
+a:hover [class^="icon-"] {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+button:hover [data-lucide],
+.wp-block-button:hover [class^="icon-"] {
+    transform: scale(1.15);
+    transition: transform 0.2s ease;
+}
+
+/* Directional icons slide on hover */
+a:hover .icon-arrow-right {
+    transform: translateX(3px);
+    transition: transform 0.2s ease;
+}
+
+a:hover .icon-external-link {
+    transform: translate(2px, -2px);
+    transition: transform 0.2s ease;
+}
+
+/* ============================================
+   ICON + TEXT COMBINATIONS
+   ============================================ */
+
+.icon-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.icon-text [data-lucide],
+.icon-text [class^="icon-"] {
+    margin-right: 0;
+    flex-shrink: 0;
+}
+
+/* Icon before text */
+.icon-before {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.icon-before [data-lucide],
+.icon-before [class^="icon-"] {
+    margin-right: 0;
+    order: -1;
+}
+
+/* Icon after text */
+.icon-after {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.icon-after [data-lucide],
+.icon-after [class^="icon-"] {
+    margin-right: 0;
+    margin-left: 0.5rem;
+}
+
+/* ============================================
+   ICON BADGES & INDICATORS
+   ============================================ */
+
+.icon-badge {
+    position: relative;
+}
+
+.icon-badge::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    background: var(--wp--preset--color--highlight);
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+
+/* ============================================
+   RESPONSIVE ICON SIZES
+   ============================================ */
+
+@media (max-width: 768px) {
+    [data-lucide],
+    [class^="icon-"],
+    [class*=" icon-"] {
+        width: 1.125em;
+        height: 1.125em;
+    }
+    
+    .icon-lg {
+        width: 1.75em;
+        height: 1.75em;
+    }
+    
+    .icon-xl {
+        width: 2.5em;
+        height: 2.5em;
+    }
+}

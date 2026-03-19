@@ -1,0 +1,38 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ACF backups and exports (keep canonical JSON only)
+acf-json/acf-export-*.json
+
+# One-time utility scripts (archive locally, don't version)
+scripts/import-blocks-*.php
+scripts/import-members-from-csv.php
+scripts/import-pro-members.php
+scripts/import-past-events.php
+scripts/import-staging6-blocks.php
+scripts/deploy-import-blocks.sh
+scripts/check-*.php
+scripts/delete-*.php
+scripts/find-duplicate-members.php
+scripts/add-nyccb-meeting.php
+scripts/create-ccb-meeting-article.php
+
+# SSH/deployment credentials (never commit)
+scripts/.ssh-config
+scripts/ssh-config.sh
+*.pem
+*.key
+id_rsa
+id_ed25519
+
+# WordPress artifacts (not theme files)
+error_log
+*.log

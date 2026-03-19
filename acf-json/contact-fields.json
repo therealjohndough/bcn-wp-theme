@@ -1,0 +1,65 @@
+[
+  {
+    "key": "group_bcn_contact",
+    "title": "Contact Information",
+    "fields": [
+      {
+        "key": "field_contact_phone",
+        "label": "Phone Number",
+        "name": "contact_phone",
+        "type": "text",
+        "default_value": "",
+        "instructions": "Main contact phone number"
+      },
+      {
+        "key": "field_contact_email",
+        "label": "Email Address",
+        "name": "contact_email",
+        "type": "email",
+        "default_value": "steve@buffalocannabisnetwork.com",
+        "instructions": "Main contact email"
+      },
+      {
+        "key": "field_contact_address",
+        "label": "Street Address",
+        "name": "contact_address",
+        "type": "text",
+        "default_value": "505 Ellicott St"
+      },
+      {
+        "key": "field_contact_city",
+        "label": "City",
+        "name": "contact_city",
+        "type": "text",
+        "default_value": "Buffalo"
+      },
+      {
+        "key": "field_contact_state",
+        "label": "State",
+        "name": "contact_state",
+        "type": "text",
+        "default_value": "NY"
+      },
+      {
+        "key": "field_contact_zip",
+        "label": "ZIP Code",
+        "name": "contact_zip",
+        "type": "text",
+        "default_value": "14203"
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "options_page",
+          "operator": "==",
+          "value": "bcn-settings"
+        }
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default"
+  }
+]
+
